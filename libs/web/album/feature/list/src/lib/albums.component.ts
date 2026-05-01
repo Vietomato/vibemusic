@@ -29,7 +29,7 @@ export class AlbumsComponent implements OnInit {
   loadMore() {
     this.store.dispatch(loadMoreAlbums());
   }
-
+// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
   togglePlay(isPlaying: boolean, contextUri: string) {
     this.playerApi
       .togglePlay(isPlaying, {

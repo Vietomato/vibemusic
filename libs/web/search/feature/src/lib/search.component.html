@@ -40,7 +40,7 @@
       </div>
     }
   }
-  <!-- Artists -->
+  <!-- Artists // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!-->
   @if (artists$ | async; as artists) {
     @if (artists.length) {
       <div>
@@ -54,14 +54,14 @@
               [routerUrl]="'/artist/' + item.id"
               [description]="item.type | titlecase"
               [roundedImage]="true"
-              (togglePlay)="togglePlay($event, item.uri)">
+              (togglePlay)="togglePlay($event, item.uri)"> 
             </as-card>
           }
         </div>
       </div>
     }
   }
-  <!-- Albums -->
+  <!-- Albums // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!-->
   @if (albums$ | async; as albums) {
     @if (albums.length) {
       <div>
@@ -74,14 +74,14 @@
               [description]="item.artists[0].name"
               [imageUrl]="item.images[0]?.url"
               [routerUrl]="'/albums/' + item.id"
-              (togglePlay)="togglePlay($event, item.uri)">
+              (togglePlay)="togglePlay($event, item.uri)"> 
             </as-card>
           }
         </div>
       </div>
     }
   }
-  <!-- Playlists -->
+  <!-- Playlists // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây! -->
   @if (playlists$ | async; as playlists) {
     @if (playlists.length) {
       <div>
@@ -94,7 +94,7 @@
               [description]="item.description"
               [imageUrl]="item.images[0]?.url"
               [routerUrl]="'/playlist/' + item.id"
-              (togglePlay)="togglePlay($event, item.uri)">
+              (togglePlay)="togglePlay($event, item.uri)"> 
             </as-card>
           }
         </div>

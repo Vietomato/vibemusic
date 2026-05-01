@@ -19,9 +19,9 @@ export class PlaylistListComponent {
 
   constructor(private playerApi: PlayerApiService) {}
 
-  togglePlay(isPlaying: boolean, contextUri: string) {
+  togglePlay(isPlaying: boolean, contextUri: string) { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     this.playerApi
-      .togglePlay(isPlaying, {
+      .togglePlay(isPlaying, {// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
         context_uri: contextUri
       })
       .subscribe();

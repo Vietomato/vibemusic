@@ -65,6 +65,7 @@ export class AlbumStore extends ComponentStore<AlbumState> {
     )
   );
 
+  // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
   readonly toggleAlbum = this.effect<{ isPlaying: boolean; uri: string }>((params$) =>
     params$.pipe(
       switchMap(({ isPlaying, uri }) =>

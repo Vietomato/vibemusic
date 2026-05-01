@@ -1,3 +1,7 @@
+:root {
+  --mau-cua-tui: #1db954; /* Đây là cái túi chứa màu xanh */
+}
+
 @layer utilities {
   .link-subtle {
     @apply text-white text-opacity-70 hover:text-white focus-visible:text-white;

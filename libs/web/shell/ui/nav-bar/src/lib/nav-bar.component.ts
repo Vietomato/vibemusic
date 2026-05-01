@@ -11,4 +11,6 @@ export class NavBarComponent {
   readonly navItems$ = this.uiStore.navItems$;
 
   constructor(private readonly uiStore: UIStore) {}
+
+  
 }

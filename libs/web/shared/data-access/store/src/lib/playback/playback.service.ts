@@ -21,8 +21,8 @@ export class PlaybackService {
     }
   }
 
-  play() {
-    this.playbackStore.player()?.togglePlay();
+  play() { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
+    this.playbackStore.player()?.togglePlay();// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
   }
 
   next() {

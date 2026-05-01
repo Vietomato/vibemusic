@@ -20,7 +20,7 @@ export class PlayerApiService {
     });
   }
 
-  play(request: SpotifyPlayRequestApi) {
+  play(request: SpotifyPlayRequestApi) { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     return this.http.put(`${this.playerUrl}/play`, request);
   }
 
@@ -28,11 +28,11 @@ export class PlayerApiService {
     return this.http.put(`${this.playerUrl}/pause`, {});
   }
 
-  togglePlay(isPlaying: boolean, request: SpotifyPlayRequestApi) {
+  togglePlay(isPlaying: boolean, request: SpotifyPlayRequestApi) { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     if (isPlaying) {
       return this.pause();
     }
-    return this.play(request);
+    return this.play(request); // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
   }
 
   next() {

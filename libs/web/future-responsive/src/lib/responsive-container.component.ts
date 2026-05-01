@@ -47,13 +47,13 @@ import * as mockAlbums from './albums.mock.json';
           [description]="item.album.artists[0].name"
           [imageUrl]="item.album.images[0]?.url"
           [routerUrl]="item.album.id"
-          (togglePlay)="togglePlay($event, item.album.uri)"
+          (togglePlay)="togglePlay($event, item.album.uri)" 
           >
         </as-card>
       }
     </ng-template>
     `
-})
+}) // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
 export class ResponsiveToContainerComponent {
   response = mockAlbums as SpotifyApi.UsersSavedAlbumsResponse;
   singleAlbum = [this.response.items[1]];
@@ -63,7 +63,7 @@ export class ResponsiveToContainerComponent {
 
   playerApi = inject(PlayerApiService);
 
-  togglePlay(isPlaying: boolean, contextUri: string) {
+  togglePlay(isPlaying: boolean, contextUri: string) { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     this.playerApi
       .togglePlay(isPlaying, {
         context_uri: contextUri

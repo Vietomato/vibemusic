@@ -29,7 +29,7 @@ export class NavLinkComponent implements OnInit {
 
   togglePlaylist(isPlaying: boolean) {
     this.playerApi
-      .togglePlay(isPlaying, {
+      .togglePlay(isPlaying, { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
         context_uri: this.playlistWithRoute?.uri
       })
       .subscribe(); //TODO: Refactor with component store live stream

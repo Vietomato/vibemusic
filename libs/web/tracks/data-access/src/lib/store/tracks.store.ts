@@ -64,7 +64,7 @@ export class TracksStore extends ComponentStore<TracksState> {
   playTrack = this.effect<{ track: SpotifyApi.TrackObjectFull }>((params$) =>
     params$.pipe(
       switchMap(({ track }) =>
-        this.playerApi.play({
+        this.playerApi.play({ // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
           context_uri: track.album.uri,
           offset: {
             position: track.track_number - 1

@@ -35,7 +35,7 @@ export class AlbumTrackComponent implements OnInit {
     if (!this.contextUri) {
       return;
     }
-
+// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     this.playerApi
       .togglePlay(isPlaying, {
         context_uri: this.contextUri,

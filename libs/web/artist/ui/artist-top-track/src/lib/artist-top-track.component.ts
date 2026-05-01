@@ -40,7 +40,7 @@ export class ArtistTopTrackComponent implements OnInit {
     if (!this.track?.uri) {
       return;
     }
-
+// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
     this.playerApi
       .togglePlay(isPlaying, {
         context_uri: this.track.album.uri,

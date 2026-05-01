@@ -1,3 +1,4 @@
+<!--// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!-->
 @if (featuredPlaylists$ | async; as playlists) {
   @if (message$ | async; as message) {
     <h2 class="mt-8 mb-4 text-heading">{{ message }}</h2>
@@ -10,11 +11,11 @@
         [imageUrl]="playlist.images[0]?.url!"
         [uri]="playlist.uri"
         [routerUrl]="playlist.routeUrl"
-        (togglePlay)="togglePlay($event, playlist.uri)">
+        (togglePlay)="togglePlay($event, playlist.uri)"> 
       </as-card>
     }
   </div>
-}
+} 
 <div
   asInfiniteScroll
   [enabled]="(hasMore$ | async) === true && (isLoading$ | async) === false"
@@ -22,4 +23,4 @@
 </div>
 @if (isLoading$ | async) {
   <as-spinner></as-spinner>
-}
+} 

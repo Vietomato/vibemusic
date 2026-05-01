@@ -105,7 +105,7 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
   readonly togglePlaylist = this.effect<TogglePlaylistParams>((params$) =>
     params$.pipe(
       switchMap(({ isPlaying }) =>
-        this.playerApi.togglePlay(isPlaying, {
+        this.playerApi.togglePlay(isPlaying, { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
           context_uri: this.playlistContextUri
         })
       )
@@ -115,7 +115,7 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
   readonly playTrack = this.effect<PlayTrackParams>((params$) =>
     params$.pipe(
       switchMap(({ position }) =>
-        this.playerApi.play({
+        this.playerApi.play({// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
           context_uri: this.playlistContextUri,
           offset: {
             position

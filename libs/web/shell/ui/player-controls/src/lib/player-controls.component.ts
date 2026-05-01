@@ -1,6 +1,8 @@
 import { PlaybackService, PlaybackStore } from '@angular-spotify/web/shared/data-access/store';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { startWith } from 'rxjs/operators';
+import { TrackingService } from './tracking.service';
+
 @Component({
   selector: 'as-player-controls',
   templateUrl: './player-controls.component.html',
@@ -13,8 +15,8 @@ export class PlayerControlsComponent {
   constructor(private playbackStore: PlaybackStore, private playbackService: PlaybackService) {
   }
 
-  async togglePlay() {
-    this.playbackService.play();
+  async togglePlay() {// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
+    this.playbackService.play();// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
   }
 
   async next() {
@@ -24,4 +26,6 @@ export class PlayerControlsComponent {
   async prev() {
     this.playbackService.prev();
   }
+
+  trackingService = inject(TrackingService);
 }

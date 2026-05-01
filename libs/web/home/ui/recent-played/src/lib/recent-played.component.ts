@@ -28,7 +28,7 @@ export class RecentPlayedComponent {
 
   togglePlayTrack(isPlaying: boolean, trackUri: string) {
     this.playerApi
-      .togglePlay(isPlaying, {
+      .togglePlay(isPlaying, { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
         uris: [trackUri]
       })
       .subscribe();

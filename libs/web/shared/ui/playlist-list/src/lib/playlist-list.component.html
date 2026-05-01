@@ -1,3 +1,4 @@
+<!--// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!-->
 @if (playlists) {
   <div class="common-grid">
     @for (playlist of playlists; track playlist) {
@@ -8,7 +9,7 @@
         [description]="playlist.description"
         [imageUrl]="playlist.images[0]?.url"
         [routerUrl]="playlist.routeUrl"
-        (togglePlay)="togglePlay($event, playlist.uri)">
+        (togglePlay)="togglePlay($event, playlist.uri)"> 
       </as-card>
     }
   </div>

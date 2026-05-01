@@ -51,7 +51,7 @@ export class PlaylistTrackComponent implements OnInit {
     }
 
     this.playerApi
-      .togglePlay(isPlaying, {
+      .togglePlay(isPlaying, {// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
         context_uri: this.contextUri,
         offset: {
           position: this.type === 'PLAYLIST' ? this.index : this.item.track.track_number - 1
