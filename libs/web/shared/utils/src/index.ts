@@ -4,3 +4,4 @@ export * from './lib/time-util';
 export * from './lib/string-util';
 export * from './lib/selector-util';
 export * from './lib/guards';
+export * from './lib/theme.service';

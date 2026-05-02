@@ -1,3 +1,4 @@
+
 @use 'tailwindcss/base';
 @use 'tailwindcss/components';
 @use 'tailwindcss/utilities';
@@ -13,6 +14,17 @@
 @use './custom/ant';
 @use './custom/view-transitions';
 
+/* KHAI BÁO MẶC ĐỊNH LÀ THEME MÀU TÍM ĐEN (Dùng cho Landing Page) */
+:root {
+  --theme-color-1: #110e20;
+  --theme-color-2: #3a1c61;
+  --theme-color-3: #190c3a;
+  --theme-color-4: #000000;
+  
+  /* Bà có thể khai báo thêm biến cho màu nút bấm, màu chữ ở đây luôn */
+  --btn-bg-color: #ffffff;
+  --btn-text-color: #000000;
+}
 
 :root {
   --background-baseline: 18 18 18;

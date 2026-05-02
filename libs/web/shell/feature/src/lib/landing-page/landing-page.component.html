@@ -1,0 +1,26 @@
+<div class="landing-container">
+
+    <canvas id="gradient-canvas" data-transition-in style="--gradient-color-1: #3f223b; --gradient-color-2: #d66cf4; --gradient-color-3: #eae2ff; --gradient-color-4: #614dc7;"></canvas>
+
+  <div class="login-box">
+    <h1>VibeMusic</h1>
+    <p>Vibing with your music</p>
+    
+    <form (submit)="onLogin($event)">
+      <div class="input-group">
+        <input type="text" placeholder="User Name" required>
+      </div>
+      <div class="input-group">
+        <input type="password" placeholder="Password" required>
+      </div>
+      
+      <button type="submit" class="btn-login">Let's get started</button>
+      
+      <div class="auth-switch">
+        <span>Don't have an account?</span>
+        <a href="javascript:void(0)">Sign up</a>
+      </div>
+
+    </form>
+  </div>
+</div>
