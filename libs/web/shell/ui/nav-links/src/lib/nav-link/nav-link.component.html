@@ -1,5 +1,5 @@
 <a
-  [routerLink]="playlistWithRoute.routeUrl"
+  [routerLink]="'/app' + playlistWithRoute.routeUrl"
   *ngrxLet="isPlaylistPlaying$ as isPlaying"
   routerLinkActive="active"
   [title]="playlistWithRoute.name"

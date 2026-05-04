@@ -23,9 +23,9 @@
   z-index: 0; /* Đẩy ra sau cùng để lót nền */
   
   /* Gọi biến CSS từ bên ngoài vào. Nếu chưa có biến thì lấy màu Tím mặc định */
-  --gradient-color-1: var(--theme-color-1, #110e20); 
+  --gradient-color-1: var(--theme-color-1, #200e1d); 
   --gradient-color-2: var(--theme-color-2, #3a1c61); 
-  --gradient-color-3: var(--theme-color-3, #190c3a);  
+  --gradient-color-3: var(--theme-color-3, #e3def0);  
   --gradient-color-4: var(--theme-color-4, #000000);
 }
 
