@@ -1,6 +1,6 @@
 <div class="landing-container">
 
-    <canvas id="gradient-canvas" data-transition-in style="--gradient-color-1: #3f223b; --gradient-color-2: #d66cf4; --gradient-color-3: #eae2ff; --gradient-color-4: #614dc7;"></canvas>
+    <canvas id="gradient-canvas" data-transition-in style="--gradient-color-1: #f399df; --gradient-color-2: #ec50ca; --gradient-color-3: #cc9ae9; --gradient-color-4: #d43376;"></canvas>
 
   <div class="login-box">
     <h1>VibeMusic</h1>
@@ -8,17 +8,28 @@
     
     <form (submit)="onLogin($event)">
       <div class="input-group">
-        <input type="text" placeholder="User Name" required>
+        <input type="text" [(ngModel)]="username" name="username" placeholder="User Name" required>
       </div>
       <div class="input-group">
-        <input type="password" placeholder="Password" required>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="Password" required>
       </div>
       
-      <button type="submit" class="btn-login">Let's get started</button>
+      <button type="submit" class="btn-login">
+        @if (isLoginMode) {
+          Let's get started
+        } @else {
+          Create Account
+        }
+      </button>
       
       <div class="auth-switch">
-        <span>Don't have an account?</span>
-        <a href="javascript:void(0)">Sign up</a>
+        @if (isLoginMode) {
+          <span>Don't have an account?</span>
+          <a (click)="toggleMode()" style="cursor: pointer;">Sign up</a>
+        } @else {
+          <span>Already have an account?</span>
+          <a (click)="toggleMode()" style="cursor: pointer;">Log in</a>
+        }
       </div>
 
     </form>
