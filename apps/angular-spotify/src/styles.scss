@@ -1,4 +1,3 @@
-
 @use 'tailwindcss/base';
 @use 'tailwindcss/components';
 @use 'tailwindcss/utilities';
@@ -14,35 +13,89 @@
 @use './custom/ant';
 @use './custom/view-transitions';
 
-/* KHAI BÁO MẶC ĐỊNH LÀ THEME MÀU TÍM ĐEN (Dùng cho Landing Page) */
-:root {
-  --theme-color-1: #110e20;
-  --theme-color-2: #3a1c61;
-  --theme-color-3: #190c3a;
-  --theme-color-4: #000000;
-  
-  /* Bà có thể khai báo thêm biến cho màu nút bấm, màu chữ ở đây luôn */
-  --btn-bg-color: #ffffff;
-  --btn-text-color: #000000;
-}
-
-:root {
-  --background-baseline: 18 18 18;
-  --background-highlight: 68 68 68;
-  --text-baseline: 255 255 255;
-  --text-primary: 29 185 84;
-}
-
+/* ==================================================== */
+/* 1. NỀN CHUYỂN ĐỘNG CSS THUẦN (Tone Sáng Pastel)      */
+/* ==================================================== */
 body {
-  min-width: 600px;
-  line-height: normal;
-  font-size: 16px;
-  letter-spacing: 0.015em;
-  @apply h-full w-full absolute overflow-hidden flex flex-col bg-black text-white/70;
+  /* Tạo nền 4 màu sáng và phóng to lên 400% để tạo hiệu ứng loang */
+  background: linear-gradient(-45deg, #FFE4E1, #FFF0F5, #F8BBD0, #FFFFFF) !important;
+  background-size: 400% 400% !important;
+  /* Lệnh này cho nó múa qua lại mượt mà */
+  animation: gradientBG 15s ease infinite !important;
+  color: #000000 !important; 
 }
 
-a, button {
-  &:focus-visible {
-    @apply outline outline-2 outline-white outline-offset-2;
-  }
+/* Keyframe điều khiển chuyển động của nền */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Đảm bảo các khung layout trong suốt để lộ nền múa ra ngoài */
+app-root, as-layout, as-main-view {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ==================================================== */
+/* 2. KÍNH TRẮNG MỜ CHO SIDEBAR VÀ PLAYING BAR          */
+/* ==================================================== */
+as-nav-bar, as-play-bar, .playback-bar {
+  background-color: rgba(255, 255, 255, 0.4) !important; 
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Tẩy nền các div con bên trong để kính được trong suốt */
+as-nav-bar > div, as-play-bar > div, .playback-bar > div {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Ép chữ bên trong kính thành màu xám đậm cho dễ đọc */
+as-nav-bar *, as-play-bar *, .playback-bar * {
+  color: #030000 !important;
+}
+
+/* ==================================================== */
+/* 3. BO GÓC PLAYING BAR THÀNH KHUNG RIÊNG              */
+/* ==================================================== */
+as-play-bar, .playback-bar {
+  border-radius: 12px !important;
+  margin: 10px !important;
+  width: calc(100% - 20px) !important;
+  position: relative !important; 
+  z-index: 10;
+}
+
+/* ==================================================== */
+/* 4. NÚT PLAY MÀU HỒNG TÍM VIBE MUSIC                  */
+/* ==================================================== */
+button.play-button, 
+button[aria-label="Play"], 
+.btn-play, 
+as-play-button button {
+  background-color: #645959 !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3) !important;
+}
+
+/* ==================================================== */
+/* 5. ÉP CHẾT MÀU XANH DƯƠNG MẶC ĐỊNH CỦA ANT DESIGN    */
+/* ==================================================== */
+a, 
+a:visited, 
+.ant-typography {
+  color: #2D3748 !important; /* Trả về màu xám đậm cho dễ đọc */
+  text-decoration: none !important; /* Bỏ gạch chân nếu có */
+  transition: color 0.2s ease;
+}
+
+/* Thêm tí hiệu ứng: Di chuột vào tên bài hát nó đổi sang màu Hồng cho xịn */
+a:hover, 
+a:active {
+  color: #d3b6b6 !important; /* Đổi sang màu Hồng Vibe Music */
 }

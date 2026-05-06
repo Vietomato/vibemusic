@@ -5,15 +5,23 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  // Địa chỉ nhà ông Phong Backend
-  private apiUrl = 'http://localhost:3000'; 
+  // 1. DÁN CÁI LINK MỚI ÔNG PHONG GỬI VÀO ĐÂY 👇 (Nhớ bỏ dấu / ở cuối link nha)
+  // Ví dụ ổng gửi: https://vibe-music-api.onrender.com
+  private apiUrl = 'https://spotify-n585.onrender.com'; // <--- Thay cái cục trong ngoặc nháy này
 
-  // Kêu xe HttpClient của Angular ra để chở dữ liệu đi
   constructor(private http: HttpClient) {}
 
-  // Lệnh bắt đầu đi giao hàng (nhận vào username và pass)
+  // 2. GẮN THÊM CHỮ /api VÔ ĐƯỜNG DẪN 👇
   login(user: string, pass: string) {
-    return this.http.post(`${this.apiUrl}/login`, {
+    return this.http.post(`${this.apiUrl}/api/login`, {
+      username: user,
+      password: pass
+    });
+  }
+
+  // TIỆN TAY LÀM LUÔN CÁI ĐĂNG KÝ CHO MỐT XÀI 👇
+  register(user: string, pass: string) {
+    return this.http.post(`${this.apiUrl}/api/register`, {
       username: user,
       password: pass
     });

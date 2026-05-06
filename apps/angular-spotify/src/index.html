@@ -50,9 +50,22 @@
     </script>
   </head>
 
+  <canvas id="gradient-canvas" style="position: absolute; pointer-events: none; opacity: 0; z-index: -1;"></canvas>
+
   <body>
     <angular-spotify-root></angular-spotify-root>
 
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
   </body>
+  <body>
+  <app-root></app-root>
+  
+
+  <script type="module">
+    import { Gradient } from './assets/Gradient.js';
+    const gradient = new Gradient();
+    gradient.initGradient('#gradient-canvas');
+  </script>
+</body>
+
 </html>

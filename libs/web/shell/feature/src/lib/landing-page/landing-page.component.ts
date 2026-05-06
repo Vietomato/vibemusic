@@ -61,14 +61,21 @@ export class LandingPageComponent implements AfterViewInit {
         }
       });
     } else {
-      // --- XỬ LÝ ĐĂNG KÝ (GIẢ LẬP CHỜ BACKEND) ---
+      // --- XỬ LÝ ĐĂNG KÝ THẬT ---
       console.log('Đang gửi API đăng ký...', this.username, this.password);
       
-      // 1. Hiện thông báo chúc mừng
-      alert('Tạo tài khoản thành công! Bây giờ hãy đăng nhập nha.');
-
-      // 2. <--- ĐÂY LÀ CHỖ CẦN SỬA: Tự động lật về chế độ Đăng Nhập
-      this.toggleMode(); 
+      // Gọi Shipper đi giao hàng cho ông Phong
+      this.authService.register(this.username, this.password).subscribe({
+        next: (response: any) => {
+          console.log('🎉 Tạo tài khoản thành công trên Database:', response);
+          alert('Tạo tài khoản thành công! Bây giờ hãy đăng nhập nha.');
+          this.toggleMode(); // Lật về form Đăng Nhập
+        },
+        error: (err) => {
+          console.error('❌ Đăng ký thất bại:', err);
+          alert('Lỗi rồi! Có thể trùng tên đăng nhập hoặc Backend chưa chạy!'); 
+        }
+      });
+    }
     }
   }
-}
