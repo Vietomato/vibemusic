@@ -5,7 +5,7 @@
   [title]="playlistWithRoute.name"
   [ngClass]="{ 'nav-link link-subtle': true, '!text-primary': isPlaying }"
   >
-  <as-media-cover [imageUrl]="playlistWithRoute.images[0]?.url" />
+  <as-media-cover [imageUrl]="playlistWithRoute?.images?.[0]?.url" />
   <span [class]="{ 'ellipsis-one-line': true, 'pr-6': isPlaying }">
     {{ playlistWithRoute.name }}
   </span>

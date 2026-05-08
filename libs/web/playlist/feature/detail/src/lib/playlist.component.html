@@ -1,26 +1,26 @@
 @if (playlist$ | async; as playlist) {
-  <div class="content-spacing">
-    <as-media-summary
-      class="with-view-transition"
-      type="Playlist"
-      [title]="playlist.name"
-      [imageUrl]="playlist.images[0]?.url"
-      [description]="playlist.description"
-      [artist]="playlist.owner.display_name"
-      [trackCount]="playlist.tracks.total"
-      [likesCount]="$any(playlist)?.followers?.total"
-      >
-    </as-media-summary>
-    <div class="pt-0 pb-6 playlist-action">
-      <as-play-button
-        [large]="true"
-        [primary]="true"
-        [isPlaying]="isPlaylistPlaying$ | async"
-        (togglePlay)="togglePlaylist($event)"
-        >
-      </as-play-button>
-    </div>
+<div class="content-spacing">
+  <as-media-summary
+    class="with-view-transition"
+    type="Playlist"
+    [title]="playlist.name"
+    [imageUrl]="playlist.images[0]?.url"
+    [description]="playlist.description"
+    [artist]="playlist.owner.display_name"
+    [trackCount]="playlist?.tracks?.total"
+    [likesCount]="$any(playlist)?.followers?.total"
+  >
+  </as-media-summary>
+  <div class="pt-0 pb-6 playlist-action">
+    <as-play-button
+      [large]="true"
+      [primary]="true"
+      [isPlaying]="isPlaylistPlaying$ | async"
+      (togglePlay)="togglePlaylist($event)"
+    >
+    </as-play-button>
   </div>
+</div>
 }
 
 <div class="px-8">
@@ -35,36 +35,41 @@
   </as-media-table-header>
 
   @if (tracks$ | async; as tracks) {
-    <div class="mb-8">
-      @for (item of tracks; track item; let idx = $index) {
-        @if (item.track) {
-          <as-playlist-track
-            [item]="item"
-            [index]="idx"
-            [contextUri]="getPlaylistContextUri(playlistId$ | async)"
-            (dblclick)="playTrack(idx)"
-            >
-          </as-playlist-track>
-        }
+  <div class="mb-8">
+
+    @for (item of tracks$ | async; track item; let idx = $index) {
+      @if (item.track) {
+        <as-playlist-track
+          [item]="item"
+          [index]="idx"
+          [contextUri]="getPlaylistContextUri(playlistId$ | async)"
+          (dblclick)="playTrack(idx)"
+        >
+        </as-playlist-track>
       }
+    }
+    
+    @empty {
+      <div class="p-8 text-center text-gray-500">
+        <p>Playlist này hiện chưa có bài hát nào.</p>
+      </div>
+    }
+  </div>
+  } @else {
+    <div class="mb-8">
+      <as-tracks-loading [rows]="10"></as-tracks-loading>
     </div>
   }
 
   <div
     asInfiniteScroll
     [enabled]="(tracksHasMore$ | async) === true && (isPlaylistTracksLoading$ | async) === false"
-    (scrolledToBottom)="loadMoreTracks()">
-  </div>
+    (scrolledToBottom)="loadMoreTracks()"
+  ></div>
 </div>
 
 @if (isCurrentPlaylistLoading$ | async) {
-  <div class="px-8 mb-5">
-    <as-tracks-loading [avatar]="true"> </as-tracks-loading>
-  </div>
-}
-
-@if (isPlaylistTracksLoading$ | async) {
-  <div class="px-8">
-    <as-tracks-loading [rows]="10"></as-tracks-loading>
-  </div>
+<div class="px-8 mb-5">
+  <as-tracks-loading [avatar]="true"> </as-tracks-loading>
+</div>
 }

@@ -285,7 +285,7 @@ Not all components have properly defined [aria attributes](https://developer.moz
 - `git clone https://github.com/trungk18/angular-spotify.git`
 - `cd angular-spotify`
 - `npm start` for starting Angular web application
-- The app should run on `http://localhost:4200/`
+- The app should run on `http://127.0.0.1:4200/`
 
 ### Unit/Integration tests 🧪
 

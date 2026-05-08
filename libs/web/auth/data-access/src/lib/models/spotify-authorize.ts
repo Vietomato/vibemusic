@@ -23,7 +23,9 @@ export class SpotifyAuthorize {
     'user-library-read',
     //Users - For SDK Playback //https://developer.spotify.com/documentation/web-playback-sdk/quick-start/
     'user-read-email',
-    'user-read-private'
+    'user-read-private',
+    'playlist-read-private',
+    'playlist-read-collaborative'
   ];
 
   generateRandomString(length: number) {
@@ -56,7 +58,8 @@ export class SpotifyAuthorize {
       redirect_uri: 'http://127.0.0.1:4200/',
       scope: this.SCOPES.join(' '),
       code_challenge_method: 'S256',
-      code_challenge: codeChallenge
+      code_challenge: codeChallenge,
+      show_dialog: 'true'
     });
 
     const authUrl = new URL(this.SPOTIFY_AUTHORIZE_URL);
