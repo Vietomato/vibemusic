@@ -1,0 +1,61 @@
+<div class="vibe-layout-wrapper w-full max-w-6xl mx-auto pt-10 px-10 text-black">
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+    
+    <div class="left-panel flex flex-col items-start">
+      <h1 class="text-4xl font-black mb-10 italic uppercase tracking-tighter">What's your vibe?</h1>
+      
+      <style>
+        @keyframes previewFlow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      </style>
+      <div 
+        class="preview-box w-full aspect-video rounded-3xl mb-8 shadow-2xl transition-all border-4 border-white/20"
+        style="background-size: 200% 200%; animation: previewFlow 20s ease infinite;"
+        [style.background]="'linear-gradient(135deg, ' + themeColors[0] + ', ' + themeColors[1] + ', ' + themeColors[2] + ', ' + themeColors[3] + ')'">
+      </div>
+
+      <button 
+        (click)="randomize()" 
+        class="px-10 py-3 bg-[#a8a29e] text-white font-black rounded-full uppercase tracking-widest text-sm transition-all transform hover:scale-105 active:scale-95 hover:opacity-80 shadow-md">
+        Randomize
+      </button>
+    </div>
+
+    <div class="right-panel flex flex-col justify-end pb-2">
+      
+      <div class="colors-selection flex flex-col gap-5 mb-12">
+        <div class="color-row flex items-center gap-6" *ngFor="let color of themeColors; let i = index">
+          <div class="relative w-12 h-12 rounded-xl border-2 border-black/10 shadow-sm transition-transform hover:rotate-6" [style.backgroundColor]="color">
+            <input 
+              type="color" 
+              [value]="color" 
+              (input)="onColorChange(i, $event)"
+              class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            >
+          </div>
+          <span class="font-mono text-xl font-bold tracking-tight">{{ color }}</span>
+        </div>
+      </div>
+
+      <div class="action-buttons flex flex-col gap-4 w-full max-w-[280px]">
+        <button 
+          (click)="applyVibe()" 
+          class="w-full py-4 bg-[#6e43a3] text-white font-black rounded-2xl uppercase tracking-[0.2em] text-sm hover:bg-[#5e3294] transition-all shadow-xl transform hover:-translate-y-1 active:translate-y-0">
+          Apply Vibe ✨
+        </button>
+        
+        <button 
+          (click)="resetVibe()" 
+          class="w-full py-4 border-2 border-[#e91e63] text-[#e91e63] font-black rounded-2xl uppercase tracking-[0.2em] text-sm hover:bg-[#e91e63] hover:text-white transition-all transform hover:scale-105">
+          Reset to Default
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

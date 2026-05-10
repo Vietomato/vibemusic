@@ -72,6 +72,14 @@ export const webShellRoutes: Route[] = [
         loadChildren: async () =>
           (await import('@angular-spotify/web/lyrics/feature')).LyricsModule
       },
+
+      {
+        path: 'vibe', 
+        // Thay cái chuỗi trong ngoặc đơn thành đường dẫn thật tới file vibe.component.ts của bà nha
+        loadComponent: async () => 
+          (await import('./vibe/vibe.component')).VibeComponent
+      },
+      
       {
         path: 'collection',
         redirectTo: 'collection/playlists',

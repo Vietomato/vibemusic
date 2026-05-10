@@ -19,7 +19,7 @@
 body {
   /* Tạo nền 4 màu sáng và phóng to lên 400% để tạo hiệu ứng loang */
   background: linear-gradient(-45deg, #FFE4E1, #FFF0F5, #F8BBD0, #FFFFFF) !important;
-  background-size: 400% 400% !important;
+  background-size: 200% 200% !important;
   /* Lệnh này cho nó múa qua lại mượt mà */
   animation: gradientBG 15s ease infinite !important;
   color: #000000 !important; 

@@ -10,6 +10,7 @@ export class RouterUtil {
     Browse: 'browse',
     CategoryId: 'categoryId',
     Lyrics: 'lyrics',
-    SearchQueryParam: 'q'
+    SearchQueryParam: 'q',
+    Vibe: 'vibe'
   };
 }
