@@ -9,10 +9,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class VibeComponent {
-  // Bộ màu mặc định hường phấn dịu dàng của bồ đây
+  // Bộ màu mặc định
   initialColors = ['#FFE4E1', '#FFF0F5', '#F8BBD0', '#FFFFFF'];
   
-  // Khởi tạo màu hiện tại bằng màu mặc định
+  // Khởi tạo màu hiện tại
   themeColors = [...this.initialColors];
 
   onColorChange(index: number, event: any) {
@@ -27,10 +27,11 @@ export class VibeComponent {
 
   applyVibe() {
     const styleId = 'vibe-magic-global-style';
-    let styleEl = document.getElementById(styleId);
+    // Thêm as HTMLStyleElement để dập tắt lỗi Strict Mode của TypeScript
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement;
     
     if (!styleEl) {
-      styleEl = document.createElement('style');
+      styleEl = document.createElement('style') as HTMLStyleElement;
       styleEl.id = styleId;
       document.head.appendChild(styleEl);
     }
@@ -51,28 +52,30 @@ export class VibeComponent {
     `;
   }
 
-  // NÚT RESET: Trả lại sự bình yên hường phấn cho giao diện
   resetVibe() {
-    // 1. Reset 4 ô màu trên màn hình về bộ màu hồng
     this.themeColors = [...this.initialColors];
 
-    // 2. Ép cái web quay về dải gradient hồng tĩnh (không chuyển động)
     const styleId = 'vibe-magic-global-style';
-    let styleEl = document.getElementById(styleId);
+    // Thêm as HTMLStyleElement ở đây nữa
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement;
     
     if (!styleEl) {
-      styleEl = document.createElement('style');
+      styleEl = document.createElement('style') as HTMLStyleElement;
       styleEl.id = styleId;
       document.head.appendChild(styleEl);
     }
 
-    // Ghi đè lại style: bỏ animation, dùng mảng initialColors
     styleEl.innerHTML = `
       body, html, as-layout, .main-view, .app-shell, .layout-container {
         background: linear-gradient(135deg, ${this.initialColors[0]}, ${this.initialColors[1]}, ${this.initialColors[2]}, ${this.initialColors[3]}) !important;
-        background-size: 100% 100% !important; /* Dàn đều, không phóng to */
-        animation: none !important; /* Tắt chuyển động */
+        background-size: 100% 100% !important;
+        animation: none !important;
       }
     `;
+  }
+
+  // Hàm trackByIndex nằm gọn gàng bên TONG class nè má
+  trackByIndex(index: number, obj: any): any {
+    return index;
   }
 }

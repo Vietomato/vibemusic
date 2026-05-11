@@ -28,7 +28,7 @@
     <div class="right-panel flex flex-col justify-end pb-2">
       
       <div class="colors-selection flex flex-col gap-5 mb-12">
-        <div class="color-row flex items-center gap-6" *ngFor="let color of themeColors; let i = index">
+        <div class="color-row flex items-center gap-6" *ngFor="let color of themeColors; let i = index; trackBy: trackByIndex">
           <div class="relative w-12 h-12 rounded-xl border-2 border-black/10 shadow-sm transition-transform hover:rotate-6" [style.backgroundColor]="color">
             <input 
               type="color" 
