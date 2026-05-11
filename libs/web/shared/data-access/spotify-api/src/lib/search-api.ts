@@ -22,10 +22,16 @@ export class SearchApiService {
    * @param {SpotifyApiParams} [apiParams={ limit: SPOTIFY_DEFAULT_LIMIT }]
    * @return {*}  {(Observable<SearchResponse>)}
    */
-  search(term: string, apiParams: SpotifyApiParams = { limit: SPOTIFY_DEFAULT_LIMIT }): Observable<SearchResponse> {
-    const params = new HttpParams({ fromObject: apiParams })
+  search(
+    term: string,
+    apiParams: SpotifyApiParams = { limit: SPOTIFY_DEFAULT_LIMIT }
+  ): Observable<SearchResponse> {
+    // KHÔNG dùng { fromObject: apiParams } nữa để loại bỏ hoàn toàn lỗi dữ liệu ẩn
+    const params = new HttpParams()
       .set('q', term)
-      .set('type', 'track,artist,album,playlist');
+      .set('type', 'track,artist,album,playlist')
+      .set('limit', '10') // Thử hạ hẳn xuống 10
+      .set('offset', '0');
 
     return this.http.get<SpotifyApi.SearchResponse>(`${this.appConfig.baseURL}/search`, { params });
   }
