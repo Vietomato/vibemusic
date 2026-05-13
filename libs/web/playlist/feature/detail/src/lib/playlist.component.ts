@@ -17,11 +17,15 @@ import { take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlaylistComponent {
+  // Những biến này dùng dấu $ ở cuối để báo hiệu đây là Observable (luồng dữ liệu)
   playlistId$ = this.store.playlistId$;
   playlist$ = this.store.playlist$;
   isPlaylistPlaying$ = this.store.isPlaylistPlaying$;
   isCurrentPlaylistLoading$ = this.store.isCurrentPlaylistLoading$;
-  tracks$ = this.store.tracks$;
+  
+  // Biến này cực quan trọng nè Châu, nó sẽ hứng dữ liệu từ cái Store bà vừa sửa
+  tracks$ = this.store.tracks$; 
+  
   isPlaylistTracksLoading$ = this.store.isPlaylistTracksLoading$;
   tracksHasMore$ = this.store.tracksHasMore$;
 
@@ -48,6 +52,7 @@ export class PlaylistComponent {
   }
 
   getPlaylistContextUri(playlistId: string | null) {
+    // Hàm này giúp lấy link playlist để Spotify biết đang phát ở đâu
     return RouteUtil.getPlaylistContextUri(playlistId || '');
   }
 }

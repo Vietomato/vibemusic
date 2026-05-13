@@ -6,10 +6,11 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { select, Store } from '@ngrx/store';
-import { combineLatest, Observable } from 'rxjs';
-import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { getPlaylistTracksById, getPlaylistTracksHasMore, getPlaylistTracksLoading, loadPlaylistTracks, loadMorePlaylistTracks } from '../playlist-tracks';
-import { getPlaylist, getPlaylistsState, loadPlaylistSuccess } from '../playlists';
+// SỬA LẠI ĐOẠN IMPORT NÀY:
+import { combineLatest, Observable} from 'rxjs';
+import { filter, map, switchMap, tap} from 'rxjs/operators'; // catchError phải nằm ở đây!
+import { getPlaylistTracksById, getPlaylistTracksHasMore, getPlaylistTracksLoading, loadMorePlaylistTracks } from '../playlist-tracks';
+import { getPlaylist, loadPlaylistSuccess } from '../playlists';
 
 interface PlaylistState extends GenericState<SpotifyApi.PlaylistObjectFull> {
   playlistId: string;
@@ -39,21 +40,15 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
         playlistId
       });
       this.loadPlaylist({ playlistId });
+      // DÒNG QUAN TRỌNG NHẤT NÈ:
+      this.loadMoreTracks(playlistId); 
     }),
     switchMap((playlistId) => this.store.pipe(select(getPlaylist(playlistId))))
   );
 
   tracks$ = this.playlistParams$.pipe(
-    tap((playlistId) => {
-      this.store.dispatch(
-        loadPlaylistTracks({
-          playlistId
-        })
-      );
-    }),
     switchMap((playlistId) => this.store.pipe(select(getPlaylistTracksById(playlistId))))
   );
-
   tracksHasMore$ = this.playlistParams$.pipe(
     switchMap((playlistId) => this.store.pipe(select(getPlaylistTracksHasMore(playlistId))))
   );
@@ -67,33 +62,27 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
 
   readonly loadPlaylist = this.effect<{ playlistId: string }>((params$) =>
     params$.pipe(
-      withLatestFrom(this.store.select(getPlaylistsState)),
-      filter(([params, state]) => !state.map?.get(params.playlistId)),
       tap(() => {
         this.patchState({
           status: 'loading',
           error: null
         });
       }),
-      map(([params]) => params),
       switchMap(({ playlistId }) =>
         this.playlistsApi.getById(playlistId).pipe(
           tapResponse(
             (playlist) => {
-              this.store.dispatch(
-                loadPlaylistSuccess({
-                  playlist
-                })
-              );
+              this.store.dispatch(loadPlaylistSuccess({ playlist }));
               this.patchState({
                 status: 'success',
                 error: null
               });
             },
             (e) => {
+              console.error('Lỗi Spotify thật nè Châu ơi:', e);
               this.patchState({
                 status: 'error',
-                error: e as unknown as string
+                error: e as any
               });
             }
           )
@@ -105,7 +94,7 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
   readonly togglePlaylist = this.effect<TogglePlaylistParams>((params$) =>
     params$.pipe(
       switchMap(({ isPlaying }) =>
-        this.playerApi.togglePlay(isPlaying, { // TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
+        this.playerApi.togglePlay(isPlaying, {
           context_uri: this.playlistContextUri
         })
       )
@@ -115,7 +104,7 @@ export class PlaylistStore extends ComponentStore<PlaylistState> {
   readonly playTrack = this.effect<PlayTrackParams>((params$) =>
     params$.pipe(
       switchMap(({ position }) =>
-        this.playerApi.play({// TODO: (CHÂU) - Nhóm mình sẽ chèn code gọi API đẩy dữ liệu về Backend của Phong tại đây!
+        this.playerApi.play({
           context_uri: this.playlistContextUri,
           offset: {
             position

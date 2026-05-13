@@ -1,10 +1,19 @@
 import { Route } from '@angular/router';
 import { LayoutComponent } from '@angular-spotify/web/shell/ui/layout';
 import { RouterUtil } from '@angular-spotify/web/shared/utils';
+// Khách được mời tới
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 export const webShellRoutes: Route[] = [
+  // 1. CỔNG CHÍNH: Gõ localhost:4200 là vào đây
   {
-    path: '',
+    path: '', 
+    component: LandingPageComponent,
+  },
+  
+  // 2. NHÀ TRONG: Đăng nhập xong bế qua localhost:4200/app
+  {
+    path: 'app', // <--- TUI SỬA THÀNH 'app' RỒI NÈ
     component: LayoutComponent,
     children: [
       {
@@ -63,16 +72,19 @@ export const webShellRoutes: Route[] = [
         loadChildren: async () =>
           (await import('@angular-spotify/web/lyrics/feature')).LyricsModule
       },
+
+      {
+        path: 'vibe', 
+        // Thay cái chuỗi trong ngoặc đơn thành đường dẫn thật tới file vibe.component.ts của bà nha
+        loadComponent: async () => 
+          (await import('./vibe/vibe.component')).VibeComponent
+      },
+      
       {
         path: 'collection',
         redirectTo: 'collection/playlists',
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: '',
-    redirectTo: 'collection',
-    pathMatch: 'full'
   }
 ];

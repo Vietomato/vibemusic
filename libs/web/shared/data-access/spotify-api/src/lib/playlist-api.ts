@@ -21,14 +21,16 @@ export class PlaylistApiService {
     );
   }
 
-  getById(playlistId: string) {
-    if (!playlistId) {
-      throw new Error('Playlist Id is required');
-    }
-    return this.http.get<SpotifyApi.PlaylistObjectFull>(
-      `${this.appConfig.baseURL}/playlists/${playlistId}`
-    );
+getById(playlistId: string) {
+  if (!playlistId) {
+    throw new Error('Playlist Id is required');
   }
+  // Thêm fields để ép Spotify nhả đúng cấu trúc mình cần, tránh các field rác gây 403
+  const fields = 'id,name,description,images,owner,tracks(items(added_at,track(id,name,uri,duration_ms,album(name,images),artists(name))))';
+  return this.http.get<SpotifyApi.PlaylistObjectFull>(
+    `${this.appConfig.baseURL}/playlists/${playlistId}?fields=${fields}`
+  );
+}
 
   getTracks(playlistId: string, params: SpotifyApiParams = { limit: SPOTIFY_DEFAULT_LIMIT }) {
     if (!playlistId) {

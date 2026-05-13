@@ -1,11 +1,11 @@
 <a
-  [routerLink]="playlistWithRoute.routeUrl"
+  [routerLink]="'/app' + playlistWithRoute.routeUrl"
   *ngrxLet="isPlaylistPlaying$ as isPlaying"
   routerLinkActive="active"
   [title]="playlistWithRoute.name"
   [ngClass]="{ 'nav-link link-subtle': true, '!text-primary': isPlaying }"
   >
-  <as-media-cover [imageUrl]="playlistWithRoute.images[0]?.url" />
+  <as-media-cover [imageUrl]="playlistWithRoute?.images?.[0]?.url" />
   <span [class]="{ 'ellipsis-one-line': true, 'pr-6': isPlaying }">
     {{ playlistWithRoute.name }}
   </span>
