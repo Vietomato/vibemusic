@@ -14,12 +14,12 @@ export class LyricsComponent {
   isSynced$ = this.lyricsStore.isSynced$;
   status$ = this.lyricsStore.status$;
 
-  constructor(
-    private lyricsStore: LyricsStore,
-    private playerApi: PlayerApiService
-  ) {}
+  constructor(private lyricsStore: LyricsStore, private playerApi: PlayerApiService) {}
 
   onSeekTo(positionMs: number): void {
     this.playerApi.seek(positionMs).subscribe();
+    this.lyricsStore.isVisible$.subscribe((v) =>
+      console.log('Màn hình Lyrics nhận được trạng thái:', v)
+    );
   }
 }

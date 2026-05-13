@@ -98,9 +98,7 @@ export class LyricsStore extends ComponentStore<LyricsState> {
   private readonly showLyricsAsPiP$ = this.effect(() =>
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map((e: NavigationEnd) =>
-        e.urlAfterRedirects.includes(RouterUtil.Configuration.Lyrics)
-      ),
+      map((e: NavigationEnd) => e.urlAfterRedirects.includes(RouterUtil.Configuration.Lyrics)),
       withLatestFrom(this.state$),
       tap(([isAtLyricsRoute, state]) => {
         if (isAtLyricsRoute) {
@@ -137,7 +135,12 @@ export class LyricsStore extends ComponentStore<LyricsState> {
             });
           }),
           catchError(() => {
-            this.patchState({ lyrics: null, isSynced: false, status: 'error', currentTrackId: trackId });
+            this.patchState({
+              lyrics: null,
+              isSynced: false,
+              status: 'error',
+              currentTrackId: trackId
+            });
             return EMPTY;
           })
         )

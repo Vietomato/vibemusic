@@ -10,19 +10,18 @@ import { TrackingService } from './tracking.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayerControlsComponent {
-  
   isPlaying$ = this.playbackStore.isPlaying$.pipe(startWith(false));
 
   constructor(
-    private playbackStore: PlaybackStore, 
-    private playbackService: PlaybackService, 
+    private playbackStore: PlaybackStore,
+    private playbackService: PlaybackService,
     private trackingService: TrackingService // Đã nhét vào constructor thành công!
   ) {}
 
   async togglePlay() {
     // Tạm thời mình cứ bắn sự kiện PLAY để test luồng trước cho khỏi rắc rối nha
     this.trackingService.trackAction('PLAY', 'id_bai_hat_tam_thoi');
-    this.playbackService.play(); 
+    this.playbackService.play();
   }
 
   async next() {
