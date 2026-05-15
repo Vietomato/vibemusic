@@ -1,11 +1,14 @@
 <footer class="now-playing-bar-container">
   <div class="now-playing-bar-left">
     @if (currentTrack$ | async; as currentTrack) {
-      <as-track-current-info
-        [track]="currentTrack">
-      </as-track-current-info>
+      
+      <div style="cursor: pointer;" (click)="toggleFullscreenPlayer(currentTrack)">
+        <as-track-current-info [track]="currentTrack"></as-track-current-info>
+      </div>
+
     }
   </div>
+
   <div class="now-playing-bar-center">
     <as-player-controls></as-player-controls>
     <as-player-playback></as-player-playback>
@@ -16,3 +19,41 @@
     <as-player-volume></as-player-volume>
   </div>
 </footer>
+
+@if (showFullscreenPlayer && currentTrackDetails) {
+  <div class="apple-music-fullscreen"
+       [style.background]="playerBackground"
+       [style.--am-text-color]="dynamicTextColor">
+
+    <button class="am-close-btn" (click)="toggleFullscreenPlayer(null)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+
+    <div class="am-container" style="position: relative; z-index: 10;">
+      <div class="am-vinyl-container" [class.is-playing]="$any(playbackState$ | async)?.paused === false">
+        <div class="am-vinyl-disk">
+          <img src="/assets/Object.png" alt="Vinyl"> </div>
+        <div class="am-album-cover">
+          <img [src]="currentTrackDetails.album.images[0].url" alt="Cover">
+        </div>
+      </div>
+      
+      <div class="am-info-and-controls">
+        
+        <div class="am-info">
+          <div class="am-title">{{ currentTrackDetails.name }}</div>
+          <div class="am-artist">{{ currentTrackDetails.artists[0].name }}</div>
+        </div>
+
+        <div class="am-controls">
+          <as-player-playback></as-player-playback>
+          <div class="am-buttons">
+            <as-player-controls></as-player-controls>
+          </div>
+        </div>
+
+      </div> </div>
+  </div>
+}

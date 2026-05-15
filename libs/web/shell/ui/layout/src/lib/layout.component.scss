@@ -32,3 +32,32 @@
     bottom: 330px;
   }
 }
+
+/* Hiệu ứng tàng hình cho Sticker Controls */
+.sticker-wrapper {
+  position: absolute; /* THÊM DÒNG NÀY: Để nó bám vào cái "bức tường" chứa nó */
+  z-index: 50;        /* THÊM DÒNG NÀY: Để nó nổi lên trên chữ/ảnh của web */
+
+  resize: none; /* Mặc định tắt thu phóng để làm biến mất cái vạch ở góc */
+  border: 1px solid transparent; /* Khung ảo để giữ bố cục không bị giật */
+  transition: border 0.2s ease;
+
+  /* Nút X mặc định tàng hình */
+  .btn-delete {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  /* KHI NGƯỜI DÙNG RÊ CHUỘT VÀO STICKER NÀY */
+  &:hover {
+    resize: horizontal; /* Mở khóa tính năng thu phóng -> Hiện cái vạch góc phải */
+    border: 1px dashed rgba(255, 255, 255, 0.4); /* Hiện một viền đứt nét mờ mờ để user biết giới hạn sticker mà kéo */
+
+    /* Bắt nút X hiện hình */
+    .btn-delete {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
