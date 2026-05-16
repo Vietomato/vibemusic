@@ -1,26 +1,23 @@
 @if (track) {
-  <div class="cursor-pointer track-cover"
-    [routerLink]="track.playlistUrl">
+  <div class="cursor-pointer track-cover">
     <as-media-cover [imageUrl]="track.album.images[0]?.url">
     </as-media-cover>
   </div>
+
   <div class="flex flex-col">
     <div class="ellipsis-one-line">
-      <a class="text-white hover:underline"
-        [routerLink]="track.albumUrl">
+      <span class="text-white font-bold">
         {{ track.name }}
-      </a>
+      </span>
     </div>
     <div class="flex">
       @for (artist of track.artists | slice:0:2; track artist; let idx = $index) {
         @if (idx !== 0) {
-          <span class="mr-1"
-          >,</span>
+          <span class="mr-1 text-description">,</span>
         }
-        <a class="text-description link-subtle ellipsis-one-line hover:underline"
-          [routerLink]="artist.artistUrl">
+        <span class="text-description ellipsis-one-line">
           {{ artist.name }}
-        </a>
+        </span>
       }
     </div>
   </div>

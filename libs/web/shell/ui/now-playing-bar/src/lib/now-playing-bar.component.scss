@@ -2,10 +2,245 @@
   grid-area: bar;
   width: 100%;
   z-index: 4;
+  position: relative;
+  z-index: 999999 !important; /* Đẩy nguyên khu vực phát nhạc lên cao nhất */
 }
+
+
 
 .now-playing-bar-container {
   display: grid;
   grid-template-columns: minmax(180px, 3fr) minmax(200px, 4fr) minmax(240px, 3fr);
   @apply px-4 items-center h-nowPlayingBar;
 }
+
+/* Lớp phủ màn hình trùm toàn bộ web */
+.apple-music-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999 !important; /* Đảm bảo đè lên cả thanh menu và mọi thứ khác */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.8s ease;
+  backdrop-filter: blur(60px); /* Kính mờ siêu cấp của Apple */
+}
+
+/* Nút tắt góc phải trên */
+.am-close-btn {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 50%;
+  
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+  }
+}
+
+
+
+
+
+
+  .am-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .am-artist {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+
+
+  /* Ép đổi màu tên bài hát và ca sĩ */
+  .am-title { color: var(--am-text-color); }
+  .am-artist { color: var(--am-text-color); opacity: 0.7; }
+
+  /* Dùng ::ng-deep để xuyên thủng component con của Angular */
+  ::ng-deep {
+    /* MÀU CHO SỐ ĐẾM THỜI GIAN: Bắt tất cả chữ trong thanh kéo đổi màu */
+    as-player-playback {
+      color: var(--am-text-color) !important;
+      
+      div, span {
+        color: var(--am-text-color) !important;
+      }
+    }
+
+    .playback-bar { 
+      width: 100%; 
+      margin-bottom: 20px; 
+    }
+
+    /* ĐỔI MÀU NÚT BẤM (Play, Pause, Next...) */
+    .player-controls { 
+      margin: 0 auto; 
+      transform: scale(1.6); /* Phóng to nút play */
+      
+      button, svg, path {
+        color: var(--am-text-color) !important;
+        fill: var(--am-text-color) !important;
+      }
+    }
+    /* CHIA BỐ CỤC NGANG */
+.am-container {
+  display: flex;
+  flex-direction: row; /* Ép nó nằm ngang nè sếp */
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  max-width: 1000px;
+  gap: 80px; /* Khoảng cách giữa bìa trái và chữ phải */
+}
+
+/* ========================================= */
+/* NỬA TRÁI: BÌA ĐĨA XOAY */
+/* ========================================= */
+.am-vinyl-container {
+  position: relative;
+  width: 40vh;
+  height: 40vh;
+  min-width: 280px;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  margin-right: 120px;
+  flex-shrink: 0;
+}
+
+/* Ảnh bìa album (Nằm đè lên trên) */
+.am-album-cover {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+}
+
+/* Đĩa Vinyl (Nằm dưới, thò ra bên phải) */
+/* Đĩa Vinyl (Đẩy từ trái qua phải cho an toàn) */
+.am-vinyl-disk {
+  position: absolute;
+  z-index: 1; /* Nằm dưới bìa */
+  top: 2.5%; /* Canh giữa chiều dọc */
+  left: 40%; /* Đẩy nó thò ra khỏi cạnh phải của bìa 40% */
+  width: 95%;
+  height: 95%;
+  animation: vinylSpin 5s linear infinite; 
+  animation-play-state: paused;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.6));
+  }
+}
+
+/* KÉO LÊN TRÊN CHÚT TÌM CÁI NÀY VÀ THÊM Z-INDEX: 10 VÀO */
+.am-album-cover {
+  position: relative;
+  z-index: 10; /* SỐ BỰ HƠN ĐỂ ĐÈ LÊN CÁI ĐĨA */
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+}
+
+/* Animation Xoay Tròn */
+@keyframes vinylSpin {
+  100% { transform: rotate(360deg); }
+}
+
+.am-vinyl-container.is-playing .am-vinyl-disk {
+  animation: vinylSpin 4s linear infinite; /* 4s xoay 1 vòng */
+  animation-play-state: running;
+}
+
+/* ========================================= */
+/* NỬA PHẢI: CHỮ VÀ NÚT BẤM */
+/* ========================================= */
+.am-info-and-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Canh lề trái cho chữ */
+  flex: 1;
+}
+
+.am-info {
+  text-align: left;
+  margin-bottom: 20px;
+  
+  .am-title {
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: var(--am-text-color);
+    text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  
+  .am-artist {
+    font-size: 24px;
+    opacity: 0.8;
+    color: var(--am-text-color);
+  }
+}
+
+/* Chỉnh lại độ bự của nút bấm */
+.am-controls {
+  width: 100%;
+  ::ng-deep {
+    .playback-bar { width: 100%; margin-bottom: 20px; }
+    
+    .player-controls { 
+      margin: 0; 
+      transform: scale(1.5); 
+      transform-origin: left center; /* Phóng to nhưng không bị lệch mâm */
+      
+      button, svg, path {
+        color: var(--am-text-color) !important;
+        fill: var(--am-text-color) !important;
+      }
+    }
+    
+    /* Ép số đếm thời gian đổi màu */
+    as-player-playback {
+      color: var(--am-text-color) !important;
+      div, span { color: var(--am-text-color) !important; }
+    }
+  }
+}
+  }

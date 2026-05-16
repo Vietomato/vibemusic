@@ -1,12 +1,37 @@
 <canvas id="gradient-canvas" #gradientCanvas style="display: none;"></canvas>
 <as-nav-bar></as-nav-bar>
 <as-top-bar></as-top-bar>
-<as-main-view></as-main-view>
+
+<div style="grid-area: main; position: relative; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+  
+  <as-main-view></as-main-view>
+
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;">
+    @for (added of addedStickers; track $index) {
+      <div 
+        class="sticker-wrapper"
+        cdkDrag 
+        [cdkDragFreeDragPosition]="{x: added.x, y: added.y}"
+        (cdkDragEnded)="onDragEnded($event, $index)" 
+        style="position: absolute; top: 0; left: 0; margin: 0; display: block; line-height: 0; width: 150px; min-width: 50px; min-height: 50px; cursor: move; pointer-events: auto; overflow: hidden; padding-bottom: 10px; padding-right: 10px; z-index: 10;">
+        
+        <button 
+          class="btn-delete"
+          (click)="removeSticker($index)"
+          style="position: absolute; top: 0; right: 0; background: #ff4d4f; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; z-index: 10; font-size: 12px; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+          ✕
+        </button>
+
+        <img [src]="added.url" style="width: 100%; height: auto; object-fit: contain; object-position: top left; pointer-events: none;" alt="User sticker">
+      </div>
+    }
+  </div>
+</div>
+
 <as-now-playing-bar></as-now-playing-bar>
 
 @if (currentAlbumCoverUrl$ | async; as imageUrl) {
-  <as-album-art-overlay [imageUrl]="imageUrl">
-  </as-album-art-overlay>
+  <as-album-art-overlay [imageUrl]="imageUrl"></as-album-art-overlay>
 }
 @if (showPiPVisualizer$ | async) {
   <as-web-visualizer-ui id="pip-visualizer"></as-web-visualizer-ui>
@@ -22,3 +47,42 @@
     (closePip)="lyricsStore.setVisibility({ isVisible: false })"
   ></as-lyrics-pip>
 }
+
+<div class="sticker-controls-container" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;">
+
+  <button 
+    class="btn-toggle-picker" 
+    style="position: absolute; bottom: 120px; right: 30px; pointer-events: auto; background: #645959; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 10px rgba(216, 27, 96, 0.3); z-index: 1000;"
+    (click)="loadStickers()">
+    👾 Vibe Sticker
+  </button>
+
+  @if (showStickerPicker) {
+    <div style="position: absolute; bottom: 170px; right: 30px; width: 320px; height: 450px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 16px; padding: 15px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; z-index: 1000;">
+      
+      <div style="display: flex; gap: 5px;">
+        <input 
+          #searchInput 
+          (keyup.enter)="searchStickers(searchInput.value)"
+          type="text" 
+          placeholder="Search..." 
+          style="flex: 1; padding: 8px 12px; border-radius: 8px; border: none; outline: none; background: rgba(255, 255, 255, 0.8);">
+        <button 
+          (click)="searchStickers(searchInput.value)" 
+          style="padding: 8px 12px; border-radius: 8px; border: none; background: #d3b6b6; color: #fff; cursor: pointer;">
+          Tìm
+        </button>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto;">
+        @for (sticker of stickers; track sticker.id) {
+          <img 
+            [src]="sticker.images.fixed_height_small.url" 
+            style="width: 100%; cursor: pointer; border-radius: 8px;"
+            (click)="addStickerToScreen(sticker)"
+            alt="sticker">
+        }
+      </div>
+    </div>
+  }
+</div>

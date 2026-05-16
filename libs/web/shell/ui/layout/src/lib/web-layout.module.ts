@@ -12,6 +12,7 @@ import { AlbumArtOverlayModule } from '@angular-spotify/web/shell/ui/album-art-o
 import { WebVisualizerUiModule } from '@angular-spotify/web/visualizer/ui';
 import { LyricsPipModule } from '@angular-spotify/web/lyrics/ui/lyrics-pip';
 import { DataSizeObserverDirective } from '@angular-spotify/web/shared/directives/data-size-observer';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { DataSizeObserverDirective } from '@angular-spotify/web/shared/directive
     AlbumArtOverlayModule,
     WebVisualizerUiModule,
     LyricsPipModule,
-    DataSizeObserverDirective
+    DataSizeObserverDirective,
+    DragDropModule
   ],
   declarations: [LayoutComponent],
   exports: [LayoutComponent]
