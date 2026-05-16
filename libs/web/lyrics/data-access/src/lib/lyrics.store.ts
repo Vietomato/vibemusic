@@ -161,7 +161,7 @@ export class LyricsStore extends ComponentStore<LyricsState> {
     }
 
     if (isVisible && !isShownAsPiP) {
-      this.router.navigate(['/', RouterUtil.Configuration.Lyrics]);
+      this.router.navigate(['/', 'app', RouterUtil.Configuration.Lyrics]);
     }
 
     if ((isVisible && isShownAsPiP) || (!isVisible && !isShownAsPiP)) {
