@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Music — Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3d;
+    --accent: #7c3aed;
+    --accent2: #06d6a0;
+    --accent3: #f72585;
+    --text: #1a1a24;
+    --text-muted: #4a4a68;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: transparent !important;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 0 24px;
+  }
+
+  header { padding: 24px 0 16px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
+  .logo-text span { color: var(--accent2); }
+
+  .status-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #333;
+    backdrop-filter: blur(12px);
+  }
+  .status-dot { width: 7px; height: 7px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+  .data-source { font-size: 11px; color: #333; margin-bottom: 20px; }
+  .data-source span { color: #7c3aed; font-weight: bold; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px; padding: 16px; position: relative; overflow: hidden;
+    animation: fadeUp 0.4s ease both; backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07);
+  }
+  .stat-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+  .stat-card:nth-child(1)::before { background: #7c3aed; }
+  .stat-card:nth-child(2)::before { background: #06d6a0; }
+  .stat-card:nth-child(3)::before { background: #f72585; }
+  .stat-card:nth-child(4)::before { background: #ffd60a; }
+
+  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 500; }
+  .stat-value { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
+  .stat-sub { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .chart-card {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px; padding: 20px; animation: fadeUp 0.5s ease both;
+    backdrop-filter: blur(12px); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07);
+    min-width: 0;
+  }
+  .chart-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .chart-subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+
+  .user-search { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+  .search-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; font-weight: 500; }
+  .user-input {
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.5); border-radius: 8px;
+    padding: 10px 16px; color: #111; font-family: 'Inter', sans-serif;
+    font-size: 14px; width: 160px; transition: border-color 0.2s; outline: none;
+    backdrop-filter: blur(12px); font-weight: 500;
+  }
+  .user-input::placeholder { color: #666; }
+  .user-input:focus { border-color: var(--accent); }
+  .search-btn {
+    background: var(--accent); border: none; border-radius: 8px; padding: 10px 20px;
+    color: white; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px;
+    cursor: pointer; transition: opacity 0.2s; white-space: nowrap;
+  }
+  .search-btn:hover { opacity: 0.85; }
+  .user-info {
+    background: rgba(255,255,255,0.15); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.5); border-radius: 8px;
+    padding: 10px 16px; font-size: 12px; color: #333;
+  }
+  .user-info span { color: var(--accent2); font-weight: 500; }
+
+  .track-list { list-style: none; }
+  .track-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .track-item:last-child { border-bottom: none; }
+  .track-rank { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--border); width: 24px; text-align: right; flex-shrink: 0; }
+  .track-rank.top { color: var(--accent2); }
+  .track-info { flex: 1; min-width: 0; }
+  .track-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .track-artist { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .track-score { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; color: var(--accent); flex-shrink: 0; }
+  .score-bar-wrap { width: 50px; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; flex-shrink: 0; }
+  .score-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.8s ease; }
+
+  .error-msg {
+    background: rgba(247,37,133,0.1); border: 1px solid var(--accent3); border-radius: 8px;
+    padding: 12px 16px; font-size: 12px; color: var(--accent3); margin-bottom: 16px; display: none;
+  }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🎵</div>
+        <div class="logo-text">Vibe<span>Music</span></div>
+      </div>
+      <div class="status-badge"><div class="status-dot"></div>User Insights</div>
+    </div>
+  </header>
+
+  <div class="data-source" id="data-source-label">Đang tải dữ liệu...</div>
+
+  <div class="user-search">
+    <span class="search-label">User ID:</span>
+    <input class="user-input" id="user-id-input" type="text" placeholder="VD: U001" value="U001" />
+    <button class="search-btn" onclick="loadUserDashboard()">Xem Insights</button>
+    <div class="user-info" id="user-info-display">Nhập User ID để xem gu âm nhạc</div>
+  </div>
+
+  <div class="error-msg" id="user-error">Không tìm thấy user này hoặc chưa có dữ liệu.</div>
+
+  <div class="stats-row" id="user-stats-row" style="display:none">
+    <div class="stat-card">
+      <div class="stat-label">Interactions</div>
+      <div class="stat-value" id="stat-interactions">—</div>
+      <div class="stat-sub">lượt tương tác</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Bài Yêu Thích</div>
+      <div class="stat-value" id="stat-top-song-score">—</div>
+      <div class="stat-sub">điểm cao nhất</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Hành Vi Nhiều Nhất</div>
+      <div class="stat-value" id="stat-top-action">—</div>
+      <div class="stat-sub">loại tương tác</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Nghệ Sĩ Yêu Thích</div>
+      <div class="stat-value" id="stat-top-artist" style="font-size:16px;padding-top:6px">—</div>
+      <div class="stat-sub">theo điểm</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Top 5 Bài Hát Yêu Thích</div>
+      <div class="chart-subtitle" id="user-chart-sub">—</div>
+      <canvas id="chart-user-songs" height="240"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Phân Bổ Hành Vi</div>
+      <div class="chart-subtitle" id="user-action-sub">—</div>
+      <canvas id="chart-user-actions" height="240"></canvas>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Top Nghệ Sĩ Yêu Thích</div>
+      <div class="chart-subtitle">Dựa trên thói quen nghe nhạc</div>
+      <canvas id="chart-user-artists" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Top 5 Bài Hát — Danh Sách</div>
+      <div class="chart-subtitle">Điểm đánh giá hành vi chi tiết</div>
+      <ul class="track-list" id="user-track-list"></ul>
+    </div>
+  </div>
+
+</div>
+<script>
+const BASE_URL = 'http://localhost:3000';
+
+// SCORING ALGORITHM
+const SCORE_CONFIG = {
+  PLAY:  [{minRatio:0.8,score:4},{minRatio:0.5,score:2},{minRatio:0.2,score:1},{minRatio:0,score:0}],
+  PAUSE: [{minRatio:0.5,score:2},{minRatio:0,score:0}],
+  PREV:  [{minRatio:0.5,score:5},{minRatio:0,score:1}],
+  NEXT:  [{minRatio:0.5,score:0},{minRatio:0.2,score:-1},{minRatio:0,score:-2}],
+};
+
+// Hàm bổ trợ để tự động cắt chuỗi dài thành nhiều dòng cho Chart.js
+// text: Chuỗi cần cắt
+// maxCharsPerLine: Số ký tự tối đa trên một dòng
+function formatMultilineLabel(text, maxCharsPerLine) {
+    if (!text) return '';
+    if (text.length <= maxCharsPerLine) return text; // Nếu ngắn quá thì khỏi cắt
+
+    const words = text.split(' '); // Tách từ theo dấu cách
+    let lines = [];
+    let currentLine = words[0];
+
+    for (let i = 1; i < words.length; i++) {
+        const word = words[i];
+        // Nếu thêm từ mới vào dòng hiện tại mà vẫn đủ chỗ
+        if ((currentLine + ' ' + word).length <= maxCharsPerLine) {
+            currentLine += ' ' + word;
+        } else {
+            // Nếu không đủ chỗ, đẩy dòng hiện tại vào mảng và bắt đầu dòng mới
+            lines.push(currentLine);
+            currentLine = word;
+        }
+    }
+    lines.push(currentLine); // Đẩy dòng cuối cùng vào
+    return lines; // Trả về mảng các dòng (ví dụ: ['Hồng', 'Nhan'])
+}
+
+function calcInteractionScore(action_type, played_duration_ms, track_duration_ms) {
+  const tiers = SCORE_CONFIG[action_type];
+  if (!tiers) return 0;
+  const ratio = track_duration_ms > 0 ? played_duration_ms / track_duration_ms : 0;
+  for (const tier of tiers) { if (ratio >= tier.minRatio) return tier.score; }
+  return 0;
+}
+
+function calcTrackScores(interactions, tracks) {
+  const trackMap = {};
+  for (const t of tracks) trackMap[t.track_id] = t;
+  const scoreMap = {};
+  for (const row of interactions) {
+    const { user_id, track_id, action_type, played_duration_ms } = row;
+    const track = trackMap[track_id];
+    if (!track) continue;
+    const key = `${user_id}__${track_id}`;
+    if (!scoreMap[key]) scoreMap[key] = { user_id, track_id, title: track.title, artist: track.artist, score: 0, interaction_count: 0 };
+    scoreMap[key].score += calcInteractionScore(action_type, Number(played_duration_ms), Number(track.duration_ms));
+    scoreMap[key].interaction_count += 1;
+  }
+  return Object.values(scoreMap).sort((a, b) => b.score - a.score);
+}
+
+function getTopTracksForUser(userInteractions, tracks, topN = 5) {
+  return calcTrackScores(userInteractions, tracks).slice(0, topN);
+}
+
+// MOCK DATA
+const MOCK_INTERACTIONS = [
+  {user_id:'U001',track_id:'T014',action_type:'PREV',played_duration_ms:190000},
+  {user_id:'U001',track_id:'T009',action_type:'PREV',played_duration_ms:180000},
+  {user_id:'U001',track_id:'T036',action_type:'PLAY',played_duration_ms:228453},
+  {user_id:'U001',track_id:'T020',action_type:'PAUSE',played_duration_ms:89146},
+  {user_id:'U001',track_id:'T008',action_type:'NEXT',played_duration_ms:6434},
+  {user_id:'U002',track_id:'T001',action_type:'PLAY',played_duration_ms:66821},
+  {user_id:'U002',track_id:'T009',action_type:'PAUSE',played_duration_ms:53909},
+  {user_id:'U002',track_id:'T007',action_type:'PREV',played_duration_ms:180000},
+  {user_id:'U002',track_id:'T041',action_type:'NEXT',played_duration_ms:1631},
+  {user_id:'U003',track_id:'T025',action_type:'PLAY',played_duration_ms:195438},
+  {user_id:'U003',track_id:'T034',action_type:'PLAY',played_duration_ms:211858},
+  {user_id:'U003',track_id:'T036',action_type:'PREV',played_duration_ms:7461},
+  {user_id:'U004',track_id:'T001',action_type:'PLAY',played_duration_ms:119245},
+  {user_id:'U004',track_id:'T007',action_type:'PLAY',played_duration_ms:179983},
+  {user_id:'U005',track_id:'T032',action_type:'PLAY',played_duration_ms:144365},
+  {user_id:'U005',track_id:'T032',action_type:'PLAY',played_duration_ms:150067},
+  {user_id:'U005',track_id:'T018',action_type:'PREV',played_duration_ms:170000},
+  {user_id:'U006',track_id:'T043',action_type:'PLAY',played_duration_ms:147677},
+  {user_id:'U007',track_id:'T029',action_type:'PLAY',played_duration_ms:101060},
+  {user_id:'U008',track_id:'T006',action_type:'PLAY',played_duration_ms:190675},
+  {user_id:'U009',track_id:'T028',action_type:'PREV',played_duration_ms:180000},
+  {user_id:'U010',track_id:'T029',action_type:'PAUSE',played_duration_ms:97087},
+];
+
+const MOCK_TRACKS = [
+  {track_id:'T001',title:'Hãy Trao Cho Anh',artist:'Sơn Tùng M-TP',duration_ms:241000},
+  {track_id:'T006',title:'Hongkong1',artist:'Nguyễn Trọng Tài',duration_ms:328000},
+  {track_id:'T007',title:'Anh Nhà Ở Đâu Thế',artist:'AMEE',duration_ms:245000},
+  {track_id:'T008',title:'Đừng Yêu Nữa Em Mệt Rồi',artist:'Min',duration_ms:301000},
+  {track_id:'T009',title:'Nơi Này Có Anh',artist:'Sơn Tùng M-TP',duration_ms:260000},
+  {track_id:'T014',title:'Ai Chung Tình Được Mãi',artist:'Đinh Tùng Huy',duration_ms:320000},
+  {track_id:'T018',title:'Hoa Hải Đường',artist:'Jack',duration_ms:278000},
+  {track_id:'T020',title:'Ngày Đầu Tiên',artist:'Đức Phúc',duration_ms:260000},
+  {track_id:'T025',title:'Tháng Năm Còn Mãi',artist:'Bích Phương',duration_ms:255000},
+  {track_id:'T028',title:'Cô Đơn Trên Sofa',artist:'Hồ Ngọc Hà',duration_ms:290000},
+  {track_id:'T029',title:'Chạy Ngay Đi',artist:'Sơn Tùng M-TP',duration_ms:240000},
+  {track_id:'T032',title:'Tình Yêu Màu Nắng',artist:'Đoàn Thúy Trang',duration_ms:270000},
+  {track_id:'T034',title:'Bài Này Chill Phết',artist:'Đen Vâu',duration_ms:295000},
+  {track_id:'T036',title:'Lạc Trôi',artist:'Sơn Tùng M-TP',duration_ms:233000},
+  {track_id:'T041',title:'Đi Về Nhà',artist:'Đen Vâu',duration_ms:310000},
+  {track_id:'T043',title:'Có Chàng Trai Viết Lên Cây',artist:'Phan Mạnh Quỳnh',duration_ms:305000},
+];
+
+// STATE
+let allInteractions = [];
+let allTracks = [];
+let chartInstances = {};
+
+// FETCH DATA
+async function fetchData() {
+  try {
+    const [intRes, trackRes] = await Promise.all([
+      fetch(`${BASE_URL}/api/interactions`),
+      fetch(`${BASE_URL}/api/tracks`)
+    ]);
+    if (!intRes.ok || !trackRes.ok) throw new Error();
+    allInteractions = await intRes.json();
+    allTracks = await trackRes.json();
+    document.getElementById('data-source-label').innerHTML = 'Nguồn dữ liệu: <span>API thật (localhost:3000)</span>';
+  } catch {
+    allInteractions = MOCK_INTERACTIONS;
+    allTracks = MOCK_TRACKS;
+    document.getElementById('data-source-label').innerHTML = 'Nguồn dữ liệu: <span style="color:#7c3aed; font-weight: 600;">Mock data (API chưa kết nối)</span>';
+  }
+}
+
+// CHART HELPERS
+const COLORS = ['#7c3aed','#06d6a0','#f72585','#ffd60a','#4cc9f0','#ff6b6b','#a8dadc','#e9c46a'];
+
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+function makeBarChart(id, labels, data, color) {
+  destroyChart(id);
+  chartInstances[id] = new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: color || COLORS[0], borderRadius: 6, borderSkipped: false }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.parsed.y} điểm` } } },
+      scales: {
+        x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, maxRotation: 0, minRotation: 0, autoSkip: false }, grid: { color: 'rgba(0,0,0,0.06)' } },
+        y: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } }
+      }
+    }
+  });
+}
+
+function makeDoughnutChart(id, labels, data) {
+  destroyChart(id);
+  chartInstances[id] = new Chart(document.getElementById(id), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: COLORS, borderWidth: 0, hoverOffset: 8 }] },
+    options: {
+      responsive: true, cutout: '65%',
+      plugins: { legend: { position: 'bottom', labels: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, padding: 12 } } }
+    }
+  });
+}
+
+function makeHBarChart(id, labels, data) {
+  destroyChart(id);
+  chartInstances[id] = new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels, datasets: [{ data, backgroundColor: COLORS, borderRadius: 4, borderSkipped: false }] },
+    options: {
+      indexAxis: 'y', responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+        y: { ticks: { color: '#1a1a24', font: { family: 'Inter', size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderTrackList(listId, tracks) {
+  const maxScore = tracks[0]?.score || 1;
+  document.getElementById(listId).innerHTML = tracks.length === 0
+    ? '<li style="padding:20px;color:var(--text-muted);font-size:13px">Chưa có dữ liệu</li>'
+    : tracks.map((t, i) => `
+        <li class="track-item">
+          <span class="track-rank ${i<3?'top':''}">${i+1}</span>
+          <div class="track-info">
+            <div class="track-name">${t.title}</div>
+            <div class="track-artist">${t.artist}</div>
+          </div>
+          <div class="score-bar-wrap"><div class="score-bar" style="width:${Math.max((t.score/maxScore)*100,4)}%"></div></div>
+          <span class="track-score">${t.score}pt</span>
+        </li>`).join('');
+}
+
+// USER DASHBOARD
+async function loadUserDashboard() {
+  const userId = document.getElementById('user-id-input').value.trim().toUpperCase();
+  const errEl  = document.getElementById('user-error');
+  errEl.style.display = 'none';
+
+  let userInteractions = [];
+  try {
+    const res = await fetch(`${BASE_URL}/api/interactions/${userId}`);
+    if (!res.ok) throw new Error();
+    userInteractions = await res.json();
+  } catch {
+    userInteractions = allInteractions.filter(i=>i.user_id===userId);
+  }
+
+  if (userInteractions.length === 0) { errEl.style.display = 'block'; return; }
+
+  const top5 = getTopTracksForUser(userInteractions, allTracks, 5);
+
+  // Stats
+  const actionCounts = {PLAY:0,PAUSE:0,NEXT:0,PREV:0};
+  for (const i of userInteractions) { if (i.action_type in actionCounts) actionCounts[i.action_type]++; }
+  const topAction = Object.entries(actionCounts).sort((a,b)=>b[1]-a[1])[0][0];
+
+  const artistScore = {};
+  for (const t of top5) { artistScore[t.artist] = (artistScore[t.artist]||0) + t.score; }
+  const topArtist = Object.entries(artistScore).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+
+  document.getElementById('user-stats-row').style.display = 'grid';
+  document.getElementById('stat-interactions').textContent = userInteractions.length;
+  document.getElementById('stat-top-song-score').textContent = top5[0]?.score ?? 0;
+  document.getElementById('stat-top-action').textContent = topAction;
+  document.getElementById('stat-top-artist').textContent = topArtist;
+
+  document.getElementById('user-chart-sub').textContent  = `Dữ liệu từ ${userInteractions.length} lượt tương tác của ${userId}`;
+  document.getElementById('user-action-sub').textContent = `Phân tích hành vi của ${userId}`;
+  document.getElementById('user-info-display').innerHTML = `<span>${userId}</span> — ${userInteractions.length} interactions`;
+
+  // 1. Tạo mảng nhãn đa dòng bằng hàm formatMultilineLabel
+const multilineLabels = top5.map(t => formatMultilineLabel(t.title, 12)); // Thử nghiệm 12 ký tự/dòng
+// 2. Truyền mảng nhãn mới vào biểu đồ
+makeBarChart('chart-user-songs', multilineLabels, top5.map(t=>t.score), COLORS[0]);
+  makeDoughnutChart('chart-user-actions', Object.keys(actionCounts), Object.values(actionCounts));
+
+  const topArtists = Object.entries(artistScore).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  makeHBarChart('chart-user-artists', topArtists.map(a=>a[0]), topArtists.map(a=>a[1]));
+  renderTrackList('user-track-list', top5);
+}
+
+// INIT
+(async () => {
+  await fetchData();
+  loadUserDashboard();
+})();
+</script>
+</body>
+</html>

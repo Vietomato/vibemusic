@@ -5,7 +5,7 @@
 <ul class="m-0">
   @for (item of navItems$ | async; track item) {
     <li class="nav-link-container">
-      <a
+      <a 
         #link="routerLinkActive"
         [routerLink]="item.path"
         routerLinkActive="active"
@@ -24,7 +24,7 @@
   }
 
   <li class="nav-link-container mt-2">
-    <a
+      <a 
       routerLink="/app/vibe"
       routerLinkActive="active"
       class="flex gap-4 items-center px-6 nav-link link-subtle transition-all"
@@ -33,7 +33,18 @@
       What's your vibe
     </a>
   </li>
-  </ul>
+
+  <li class="nav-link-container mt-2">
+      <a 
+      routerLink="/app/dashboard"
+      routerLinkActive="active"
+      class="flex gap-4 items-center px-6 nav-link link-subtle transition-all"
+      >
+      <span style="font-size: 20px; line-height: 1;">📊</span>
+      Dashboard
+    </a>
+  </li>
+</ul>
 
 <as-nav-links />
 

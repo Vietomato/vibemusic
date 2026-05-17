@@ -75,6 +75,12 @@ export const webShellRoutes: Route[] = [
         loadComponent: async () => 
           (await import('./vibe/vibe.component')).VibeComponent
       },
+
+      {
+        path: 'dashboard',
+        loadComponent: async () =>
+        (await import('./dashboard.component')).DashboardComponent
+      },
       
       {
         path: 'collection',
