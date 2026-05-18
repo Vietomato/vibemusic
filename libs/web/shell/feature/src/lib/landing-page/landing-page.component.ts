@@ -1,5 +1,4 @@
 import { Component, AfterViewInit } from '@angular/core'; 
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { AuthService } from './auth.service'; 
@@ -24,7 +23,7 @@ export class LandingPageComponent implements AfterViewInit {
   isLoginMode = true; 
 
   // Gọi Router và Shipper vào
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   // Hàm lật qua lật lại giữa Đăng nhập / Đăng ký
   toggleMode() {
@@ -67,8 +66,8 @@ export class LandingPageComponent implements AfterViewInit {
             localStorage.setItem('currentUser', JSON.stringify(userToSave));
             console.log('🎯 Đã đồng bộ ID nghe nhạc thành công!');
           }
-
-          this.router.navigate(['/app']); // Mở cửa vô web
+          window.location.href = '/app';
+          //this.router.navigate(['/app']); // Mở cửa vô web
         },
         error: (err) => {
           console.error('❌ Đăng nhập thất bại:', err);
