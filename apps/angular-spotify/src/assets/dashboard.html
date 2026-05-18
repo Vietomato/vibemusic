@@ -180,12 +180,11 @@ header { padding: 24px 0 16px; border-bottom: 1px solid rgba(255,255,255,0.2); m
 <div class="container">
 
   <header>
-    <div class="header-inner">
-      <div class="logo">
-        <div class="logo-icon">🎵</div>
-        <div class="logo-text">Vibe<span>Music</span></div>
-      </div>
+    <div class="header-inner" style="justify-content: flex-end;"> 
       <div class="header-right">
+        <button class="search-toggle-btn" id="btn-my-dashboard" onclick="loadMyDashboard()" style="display: none; background: rgba(6,214,160,0.15); border-color: rgba(6,214,160,0.4); color: var(--accent2);">
+          🏠 Dashboard của tôi
+        </button>
         <button class="search-toggle-btn" onclick="toggleSearch()">
           🔍 Tìm user khác
         </button>
@@ -285,17 +284,16 @@ const SCORE_CONFIG = {
   NEXT:  [{minRatio:0.5,score:0},{minRatio:0.2,score:-1},{minRatio:0,score:-2}],
 };
 
-function formatMultilineLabel(text, maxCharsPerLine) {
+function formatMultilineLabel(text, maxLength) {
   if (!text) return '';
-  if (text.length <= maxCharsPerLine) return text;
-  const words = text.split(' ');
-  let lines = [], currentLine = words[0];
-  for (let i = 1; i < words.length; i++) {
-    if ((currentLine + ' ' + words[i]).length <= maxCharsPerLine) currentLine += ' ' + words[i];
-    else { lines.push(currentLine); currentLine = words[i]; }
+  
+  // Nếu chuỗi dài hơn giới hạn cho phép, cắt ngang và thêm dấu ...
+  if (text.length > 15) {
+    return text.substring(0, 15) + '...';
   }
-  lines.push(currentLine);
-  return lines;
+  
+  // Nếu chuỗi ngắn thì giữ nguyên
+  return text;
 }
 
 function calcInteractionScore(action_type, played_duration_ms, track_duration_ms) {
@@ -426,6 +424,20 @@ async function renderDashboard(searchKey, displayName) {
   errEl.style.display = 'none';
   noDataEl.style.display = 'none';
 
+  // =========================================================
+  // 3. CHÈN ĐOẠN NÀY ĐỂ ẨN/HIỆN NÚT "DASHBOARD CỦA TÔI"
+  const loggedInUser = getCurrentUser();
+  const btnMyDash = document.getElementById('btn-my-dashboard');
+  if (btnMyDash && loggedInUser) {
+    // Nếu ID đang xem (searchKey) KHÁC với ID của bạn -> Hiện nút để bấm về
+    if (searchKey !== loggedInUser.key) {
+      btnMyDash.style.display = 'flex';
+    } else {
+      // Nếu đang ở nhà mình rồi thì giấu nút đi cho gọn
+      btnMyDash.style.display = 'none'; 
+    }
+  }
+
   const isUUID = searchKey.length > 20;
   const apiEndpoint = isUUID ? `/interactions/${searchKey}` : `/interactions/username/${searchKey}`;
 
@@ -485,6 +497,15 @@ async function searchUser() {
   if (!searchKey) return;
   document.getElementById('search-panel').classList.remove('open');
   await renderDashboard(searchKey, searchKey);
+}
+
+// QUAY VỀ DASHBOARD CỦA CHÍNH MÌNH
+async function loadMyDashboard() {
+  const currentUser = getCurrentUser(); // Hàm này luôn nhớ bạn là ai nhờ URL của Angular
+  if (currentUser) {
+    // Tự động load lại dữ liệu bằng ID của chính bạn
+    await renderDashboard(currentUser.key, currentUser.key);
+  }
 }
 
 // INIT
