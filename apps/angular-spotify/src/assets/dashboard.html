@@ -6,143 +6,174 @@
 <title>Vibe Music — Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap');
 
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: #2a2a3d;
-    --accent: #7c3aed;
-    --accent2: #06d6a0;
-    --accent3: #f72585;
-    --text: #1a1a24;
-    --text-muted: #4a4a68;
-  }
+:root {
+  --accent: #7c3aed;
+  --accent2: #06d6a0;
+  --accent3: #f72585;
+  --text: #1a1a24;
+  --text-muted: #4a4a68;
+  --border: #2a2a3d;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html, body {
-    background: transparent !important;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+html, body {
+  background: transparent !important;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-  .container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    padding: 0 24px;
-  }
+.container { position: relative; z-index: 1; width: 100%; padding: 0 24px; }
 
-  header { padding: 24px 0 16px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px; }
-  .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .logo { display: flex; align-items: center; gap: 12px; }
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-  .logo-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
-  .logo-text span { color: var(--accent2); }
+header { padding: 24px 0 16px; border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.logo-text { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
+.logo-text span { color: var(--accent2); }
 
-  .status-badge {
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-    padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #333;
-    backdrop-filter: blur(12px);
-  }
-  .status-dot { width: 7px; height: 7px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.header-right { display: flex; align-items: center; gap: 10px; }
 
-  .data-source { font-size: 11px; color: #333; margin-bottom: 20px; }
-  .data-source span { color: #7c3aed; font-weight: bold; }
+.status-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; color: #333;
+  backdrop-filter: blur(12px);
+}
+.status-dot { width: 7px; height: 7px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
 
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-  }
+/* Nút tìm user khác */
+.search-toggle-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4);
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; color: var(--accent);
+  cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500;
+  backdrop-filter: blur(12px); transition: all 0.2s;
+}
+.search-toggle-btn:hover { background: rgba(124,58,237,0.25); }
 
-  .stat-card {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 12px; padding: 16px; position: relative; overflow: hidden;
-    animation: fadeUp 0.4s ease both; backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07);
-  }
-  .stat-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
-  .stat-card:nth-child(1)::before { background: #7c3aed; }
-  .stat-card:nth-child(2)::before { background: #06d6a0; }
-  .stat-card:nth-child(3)::before { background: #f72585; }
-  .stat-card:nth-child(4)::before { background: #ffd60a; }
+/* Panel search — ẩn mặc định */
+.search-panel {
+  display: none;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px; padding: 16px 20px; margin-bottom: 20px;
+  backdrop-filter: blur(12px); animation: fadeUp 0.2s ease;
+}
+.search-panel.open { display: block; }
 
-  .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 500; }
-  .stat-value { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
-  .stat-sub { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.search-panel-title {
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px;
+  margin-bottom: 12px; color: var(--text);
+}
 
-  .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
-  }
+.search-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.search-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; font-weight: 500; }
+.user-input {
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); border-radius: 8px;
+  padding: 9px 14px; color: #111; font-family: 'Inter', sans-serif;
+  font-size: 13px; width: 200px; transition: border-color 0.2s; outline: none;
+  backdrop-filter: blur(12px); font-weight: 500;
+}
+.user-input::placeholder { color: #888; }
+.user-input:focus { border-color: var(--accent); }
+.search-btn {
+  background: var(--accent); border: none; border-radius: 8px; padding: 9px 18px;
+  color: white; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 12px;
+  cursor: pointer; transition: opacity 0.2s; white-space: nowrap;
+}
+.search-btn:hover { opacity: 0.85; }
+.close-search-btn {
+  background: rgba(0,0,0,0.08); border: none; border-radius: 8px; padding: 9px 14px;
+  color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 12px;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.close-search-btn:hover { opacity: 0.7; }
 
-  .chart-card {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 12px; padding: 20px; animation: fadeUp 0.5s ease both;
-    backdrop-filter: blur(12px); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07);
-    min-width: 0;
-  }
-  .chart-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
-  .chart-subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+/* Current user banner */
+.current-user-banner {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(6,214,160,0.1); border: 1px solid rgba(6,214,160,0.3);
+  border-radius: 10px; padding: 10px 16px; margin-bottom: 20px; font-size: 12px;
+}
+.current-user-banner .avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.current-user-banner .name { font-weight: 600; color: var(--accent2); font-size: 13px; }
+.current-user-banner .sub { color: var(--text-muted); font-size: 11px; margin-top: 1px; }
 
-  .user-search { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
-  .search-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; font-weight: 500; }
-  .user-input {
-    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.5); border-radius: 8px;
-    padding: 10px 16px; color: #111; font-family: 'Inter', sans-serif;
-    font-size: 14px; width: 160px; transition: border-color 0.2s; outline: none;
-    backdrop-filter: blur(12px); font-weight: 500;
-  }
-  .user-input::placeholder { color: #666; }
-  .user-input:focus { border-color: var(--accent); }
-  .search-btn {
-    background: var(--accent); border: none; border-radius: 8px; padding: 10px 20px;
-    color: white; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px;
-    cursor: pointer; transition: opacity 0.2s; white-space: nowrap;
-  }
-  .search-btn:hover { opacity: 0.85; }
-  .user-info {
-    background: rgba(255,255,255,0.15); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.5); border-radius: 8px;
-    padding: 10px 16px; font-size: 12px; color: #333;
-  }
-  .user-info span { color: var(--accent2); font-weight: 500; }
+.data-source { font-size: 11px; color: #333; margin-bottom: 20px; }
+.data-source span { color: #7c3aed; font-weight: bold; }
 
-  .track-list { list-style: none; }
-  .track-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
-  .track-item:last-child { border-bottom: none; }
-  .track-rank { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--border); width: 24px; text-align: right; flex-shrink: 0; }
-  .track-rank.top { color: var(--accent2); }
-  .track-info { flex: 1; min-width: 0; }
-  .track-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .track-artist { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-  .track-score { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; color: var(--accent); flex-shrink: 0; }
-  .score-bar-wrap { width: 50px; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; flex-shrink: 0; }
-  .score-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.8s ease; }
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px; margin-bottom: 20px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 12px; padding: 16px; position: relative; overflow: hidden;
+  animation: fadeUp 0.4s ease both; backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07);
+}
+.stat-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; }
+.stat-card:nth-child(1)::before { background: #7c3aed; }
+.stat-card:nth-child(2)::before { background: #06d6a0; }
+.stat-card:nth-child(3)::before { background: #f72585; }
+.stat-card:nth-child(4)::before { background: #ffd60a; }
 
-  .error-msg {
-    background: rgba(247,37,133,0.1); border: 1px solid var(--accent3); border-radius: 8px;
-    padding: 12px 16px; font-size: 12px; color: var(--accent3); margin-bottom: 16px; display: none;
-  }
+.stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 500; }
+.stat-value { font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; }
+.stat-sub { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
 
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.charts-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-bottom: 16px;
+}
+.chart-card {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 12px; padding: 20px; animation: fadeUp 0.5s ease both;
+  backdrop-filter: blur(12px); box-shadow: 0 8px 32px 0 rgba(31,38,135,0.07); min-width: 0;
+}
+.chart-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+.chart-subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+
+.track-list { list-style: none; }
+.track-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.track-item:last-child { border-bottom: none; }
+.track-rank { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 16px; color: var(--border); width: 24px; text-align: right; flex-shrink: 0; }
+.track-rank.top { color: var(--accent2); }
+.track-info { flex: 1; min-width: 0; }
+.track-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-artist { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.track-score { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; color: var(--accent); flex-shrink: 0; }
+.score-bar-wrap { width: 50px; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; flex-shrink: 0; }
+.score-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.8s ease; }
+
+.error-msg {
+  background: rgba(247,37,133,0.1); border: 1px solid var(--accent3); border-radius: 8px;
+  padding: 12px 16px; font-size: 12px; color: var(--accent3); margin-bottom: 16px; display: none;
+}
+
+.no-data-msg {
+  text-align: center; padding: 40px 20px;
+  background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3);
+  border-radius: 12px; margin-bottom: 20px;
+}
+.no-data-msg .icon { font-size: 32px; margin-bottom: 12px; }
+.no-data-msg p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
@@ -154,20 +185,44 @@
         <div class="logo-icon">🎵</div>
         <div class="logo-text">Vibe<span>Music</span></div>
       </div>
-      <div class="status-badge"><div class="status-dot"></div>User Insights</div>
+      <div class="header-right">
+        <button class="search-toggle-btn" onclick="toggleSearch()">
+          🔍 Tìm user khác
+        </button>
+        <div class="status-badge"><div class="status-dot"></div>User Insights</div>
+      </div>
     </div>
   </header>
 
+  <!-- SEARCH PANEL — ẩn mặc định -->
+  <div class="search-panel" id="search-panel">
+    <div class="search-panel-title">Xem insights của user khác</div>
+    <div class="search-row">
+      <span class="search-label">Username:</span>
+      <input class="user-input" id="user-id-input" type="text" placeholder="Nhập username..." />
+      <button class="search-btn" onclick="searchUser()">Xem Insights</button>
+      <button class="close-search-btn" onclick="toggleSearch()">Đóng</button>
+    </div>
+  </div>
+
   <div class="data-source" id="data-source-label">Đang tải dữ liệu...</div>
 
-  <div class="user-search">
-    <span class="search-label">User ID:</span>
-    <input class="user-input" id="user-id-input" type="text" placeholder="VD: U001" value="U001" />
-    <button class="search-btn" onclick="loadUserDashboard()">Xem Insights</button>
-    <div class="user-info" id="user-info-display">Nhập User ID để xem gu âm nhạc</div>
+  <!-- BANNER USER HIỆN TẠI -->
+  <div class="current-user-banner" id="current-user-banner" style="display:none">
+    <div class="avatar">👤</div>
+    <div>
+      <div class="name" id="banner-username">—</div>
+      <div class="sub" id="banner-sub">Đang xem insights của bạn</div>
+    </div>
   </div>
 
   <div class="error-msg" id="user-error">Không tìm thấy user này hoặc chưa có dữ liệu.</div>
+
+  <!-- NO DATA MESSAGE -->
+  <div class="no-data-msg" id="no-data-msg" style="display:none">
+    <div class="icon">🎵</div>
+    <p>Bạn chưa có dữ liệu nghe nhạc nào.<br>Hãy nghe một vài bài để xem insights của bạn!</p>
+  </div>
 
   <div class="stats-row" id="user-stats-row" style="display:none">
     <div class="stat-card">
@@ -220,7 +275,7 @@
 
 </div>
 <script>
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://spotify-n585.onrender.com/api';
 
 // SCORING ALGORITHM
 const SCORE_CONFIG = {
@@ -230,30 +285,17 @@ const SCORE_CONFIG = {
   NEXT:  [{minRatio:0.5,score:0},{minRatio:0.2,score:-1},{minRatio:0,score:-2}],
 };
 
-// Hàm bổ trợ để tự động cắt chuỗi dài thành nhiều dòng cho Chart.js
-// text: Chuỗi cần cắt
-// maxCharsPerLine: Số ký tự tối đa trên một dòng
 function formatMultilineLabel(text, maxCharsPerLine) {
-    if (!text) return '';
-    if (text.length <= maxCharsPerLine) return text; // Nếu ngắn quá thì khỏi cắt
-
-    const words = text.split(' '); // Tách từ theo dấu cách
-    let lines = [];
-    let currentLine = words[0];
-
-    for (let i = 1; i < words.length; i++) {
-        const word = words[i];
-        // Nếu thêm từ mới vào dòng hiện tại mà vẫn đủ chỗ
-        if ((currentLine + ' ' + word).length <= maxCharsPerLine) {
-            currentLine += ' ' + word;
-        } else {
-            // Nếu không đủ chỗ, đẩy dòng hiện tại vào mảng và bắt đầu dòng mới
-            lines.push(currentLine);
-            currentLine = word;
-        }
-    }
-    lines.push(currentLine); // Đẩy dòng cuối cùng vào
-    return lines; // Trả về mảng các dòng (ví dụ: ['Hồng', 'Nhan'])
+  if (!text) return '';
+  if (text.length <= maxCharsPerLine) return text;
+  const words = text.split(' ');
+  let lines = [], currentLine = words[0];
+  for (let i = 1; i < words.length; i++) {
+    if ((currentLine + ' ' + words[i]).length <= maxCharsPerLine) currentLine += ' ' + words[i];
+    else { lines.push(currentLine); currentLine = words[i]; }
+  }
+  lines.push(currentLine);
+  return lines;
 }
 
 function calcInteractionScore(action_type, played_duration_ms, track_duration_ms) {
@@ -284,71 +326,46 @@ function getTopTracksForUser(userInteractions, tracks, topN = 5) {
   return calcTrackScores(userInteractions, tracks).slice(0, topN);
 }
 
-// MOCK DATA
-const MOCK_INTERACTIONS = [
-  {user_id:'U001',track_id:'T014',action_type:'PREV',played_duration_ms:190000},
-  {user_id:'U001',track_id:'T009',action_type:'PREV',played_duration_ms:180000},
-  {user_id:'U001',track_id:'T036',action_type:'PLAY',played_duration_ms:228453},
-  {user_id:'U001',track_id:'T020',action_type:'PAUSE',played_duration_ms:89146},
-  {user_id:'U001',track_id:'T008',action_type:'NEXT',played_duration_ms:6434},
-  {user_id:'U002',track_id:'T001',action_type:'PLAY',played_duration_ms:66821},
-  {user_id:'U002',track_id:'T009',action_type:'PAUSE',played_duration_ms:53909},
-  {user_id:'U002',track_id:'T007',action_type:'PREV',played_duration_ms:180000},
-  {user_id:'U002',track_id:'T041',action_type:'NEXT',played_duration_ms:1631},
-  {user_id:'U003',track_id:'T025',action_type:'PLAY',played_duration_ms:195438},
-  {user_id:'U003',track_id:'T034',action_type:'PLAY',played_duration_ms:211858},
-  {user_id:'U003',track_id:'T036',action_type:'PREV',played_duration_ms:7461},
-  {user_id:'U004',track_id:'T001',action_type:'PLAY',played_duration_ms:119245},
-  {user_id:'U004',track_id:'T007',action_type:'PLAY',played_duration_ms:179983},
-  {user_id:'U005',track_id:'T032',action_type:'PLAY',played_duration_ms:144365},
-  {user_id:'U005',track_id:'T032',action_type:'PLAY',played_duration_ms:150067},
-  {user_id:'U005',track_id:'T018',action_type:'PREV',played_duration_ms:170000},
-  {user_id:'U006',track_id:'T043',action_type:'PLAY',played_duration_ms:147677},
-  {user_id:'U007',track_id:'T029',action_type:'PLAY',played_duration_ms:101060},
-  {user_id:'U008',track_id:'T006',action_type:'PLAY',played_duration_ms:190675},
-  {user_id:'U009',track_id:'T028',action_type:'PREV',played_duration_ms:180000},
-  {user_id:'U010',track_id:'T029',action_type:'PAUSE',played_duration_ms:97087},
-];
-
-const MOCK_TRACKS = [
-  {track_id:'T001',title:'Hãy Trao Cho Anh',artist:'Sơn Tùng M-TP',duration_ms:241000},
-  {track_id:'T006',title:'Hongkong1',artist:'Nguyễn Trọng Tài',duration_ms:328000},
-  {track_id:'T007',title:'Anh Nhà Ở Đâu Thế',artist:'AMEE',duration_ms:245000},
-  {track_id:'T008',title:'Đừng Yêu Nữa Em Mệt Rồi',artist:'Min',duration_ms:301000},
-  {track_id:'T009',title:'Nơi Này Có Anh',artist:'Sơn Tùng M-TP',duration_ms:260000},
-  {track_id:'T014',title:'Ai Chung Tình Được Mãi',artist:'Đinh Tùng Huy',duration_ms:320000},
-  {track_id:'T018',title:'Hoa Hải Đường',artist:'Jack',duration_ms:278000},
-  {track_id:'T020',title:'Ngày Đầu Tiên',artist:'Đức Phúc',duration_ms:260000},
-  {track_id:'T025',title:'Tháng Năm Còn Mãi',artist:'Bích Phương',duration_ms:255000},
-  {track_id:'T028',title:'Cô Đơn Trên Sofa',artist:'Hồ Ngọc Hà',duration_ms:290000},
-  {track_id:'T029',title:'Chạy Ngay Đi',artist:'Sơn Tùng M-TP',duration_ms:240000},
-  {track_id:'T032',title:'Tình Yêu Màu Nắng',artist:'Đoàn Thúy Trang',duration_ms:270000},
-  {track_id:'T034',title:'Bài Này Chill Phết',artist:'Đen Vâu',duration_ms:295000},
-  {track_id:'T036',title:'Lạc Trôi',artist:'Sơn Tùng M-TP',duration_ms:233000},
-  {track_id:'T041',title:'Đi Về Nhà',artist:'Đen Vâu',duration_ms:310000},
-  {track_id:'T043',title:'Có Chàng Trai Viết Lên Cây',artist:'Phan Mạnh Quỳnh',duration_ms:305000},
-];
-
-// STATE
-let allInteractions = [];
 let allTracks = [];
 let chartInstances = {};
 
-// FETCH DATA
+// LẤY USER HIỆN TẠI từ URL param hoặc localStorage
+function getCurrentUser() {
+  // Ưu tiên 1: URL param ?userId=xxx hoặc ?username=xxx
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('userId')) return { key: params.get('userId'), isUUID: true };
+  if (params.get('username')) return { key: params.get('username'), isUUID: false };
+
+  // Ưu tiên 2: localStorage (Châu lưu sau khi login)
+  const vibeUserId = localStorage.getItem('vibe_user_id');
+  if (vibeUserId) return { key: vibeUserId, isUUID: true };
+
+  const vibeUsername = localStorage.getItem('vibe_username');
+  if (vibeUsername) return { key: vibeUsername, isUUID: false };
+
+  return null;
+}
+
+// TOGGLE SEARCH PANEL
+function toggleSearch() {
+  const panel = document.getElementById('search-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('user-id-input').focus();
+  }
+}
+
+// FETCH TRACKS
 async function fetchData() {
   try {
-    const [intRes, trackRes] = await Promise.all([
-      fetch(`${BASE_URL}/api/interactions`),
-      fetch(`${BASE_URL}/api/tracks`)
-    ]);
-    if (!intRes.ok || !trackRes.ok) throw new Error();
-    allInteractions = await intRes.json();
-    allTracks = await trackRes.json();
-    document.getElementById('data-source-label').innerHTML = 'Nguồn dữ liệu: <span>API thật (localhost:3000)</span>';
+    const trackRes = await fetch(`${BASE_URL}/tracks`);
+    if (!trackRes.ok) throw new Error();
+    const trackData = await trackRes.json();
+    allTracks = trackData.data ? trackData.data : trackData;
+    document.getElementById('data-source-label').innerHTML = `Nguồn dữ liệu: <span style="color:#7c3aed;">API thật</span>`;
   } catch {
-    allInteractions = MOCK_INTERACTIONS;
-    allTracks = MOCK_TRACKS;
-    document.getElementById('data-source-label').innerHTML = 'Nguồn dữ liệu: <span style="color:#7c3aed; font-weight: 600;">Mock data (API chưa kết nối)</span>';
+    allTracks = [];
+    document.getElementById('data-source-label').innerHTML = 'Nguồn dữ liệu: <span style="color:#f72585;">Lỗi kết nối API</span>';
   }
 }
 
@@ -364,14 +381,7 @@ function makeBarChart(id, labels, data, color) {
   chartInstances[id] = new Chart(document.getElementById(id), {
     type: 'bar',
     data: { labels, datasets: [{ data, backgroundColor: color || COLORS[0], borderRadius: 6, borderSkipped: false }] },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.parsed.y} điểm` } } },
-      scales: {
-        x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, maxRotation: 0, minRotation: 0, autoSkip: false }, grid: { color: 'rgba(0,0,0,0.06)' } },
-        y: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } }
-      }
-    }
+    options: { responsive: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.parsed.y} điểm` } } }, scales: { x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, maxRotation: 0, minRotation: 0, autoSkip: false }, grid: { color: 'rgba(0,0,0,0.06)' } }, y: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } } } }
   });
 }
 
@@ -380,10 +390,7 @@ function makeDoughnutChart(id, labels, data) {
   chartInstances[id] = new Chart(document.getElementById(id), {
     type: 'doughnut',
     data: { labels, datasets: [{ data, backgroundColor: COLORS, borderWidth: 0, hoverOffset: 8 }] },
-    options: {
-      responsive: true, cutout: '65%',
-      plugins: { legend: { position: 'bottom', labels: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, padding: 12 } } }
-    }
+    options: { responsive: true, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#4a4a68', font: { family: 'Inter', size: 10 }, padding: 12 } } } }
   });
 }
 
@@ -392,14 +399,7 @@ function makeHBarChart(id, labels, data) {
   chartInstances[id] = new Chart(document.getElementById(id), {
     type: 'bar',
     data: { labels, datasets: [{ data, backgroundColor: COLORS, borderRadius: 4, borderSkipped: false }] },
-    options: {
-      indexAxis: 'y', responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
-        y: { ticks: { color: '#1a1a24', font: { family: 'Inter', size: 10 } }, grid: { display: false } }
-      }
-    }
+    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#4a4a68', font: { family: 'Inter', size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } }, y: { ticks: { color: '#1a1a24', font: { family: 'Inter', size: 10 } }, grid: { display: false } } } }
   });
 }
 
@@ -419,30 +419,45 @@ function renderTrackList(listId, tracks) {
         </li>`).join('');
 }
 
-// USER DASHBOARD
-async function loadUserDashboard() {
-  const userId = document.getElementById('user-id-input').value.trim().toUpperCase();
-  const errEl  = document.getElementById('user-error');
+// RENDER DASHBOARD
+async function renderDashboard(searchKey, displayName) {
+  const errEl = document.getElementById('user-error');
+  const noDataEl = document.getElementById('no-data-msg');
   errEl.style.display = 'none';
+  noDataEl.style.display = 'none';
+
+  const isUUID = searchKey.length > 20;
+  const apiEndpoint = isUUID ? `/interactions/${searchKey}` : `/interactions/username/${searchKey}`;
 
   let userInteractions = [];
   try {
-    const res = await fetch(`${BASE_URL}/api/interactions/${userId}`);
+    const res = await fetch(`${BASE_URL}${apiEndpoint}`);
     if (!res.ok) throw new Error();
-    userInteractions = await res.json();
+    const data = await res.json();
+    userInteractions = data.data ? data.data : data;
   } catch {
-    userInteractions = allInteractions.filter(i=>i.user_id===userId);
+    userInteractions = [];
   }
 
-  if (userInteractions.length === 0) { errEl.style.display = 'block'; return; }
+  // Cập nhật banner
+  document.getElementById('current-user-banner').style.display = 'flex';
+  document.getElementById('banner-username').textContent = displayName || searchKey;
+  document.getElementById('banner-sub').textContent = userInteractions.length > 0
+    ? `${userInteractions.length} lượt tương tác đã ghi nhận`
+    : 'Chưa có dữ liệu nghe nhạc';
+
+  if (userInteractions.length === 0) {
+    noDataEl.style.display = 'block';
+    document.getElementById('user-stats-row').style.display = 'none';
+    ['chart-user-songs', 'chart-user-actions', 'chart-user-artists'].forEach(destroyChart);
+    document.getElementById('user-track-list').innerHTML = '';
+    return;
+  }
 
   const top5 = getTopTracksForUser(userInteractions, allTracks, 5);
-
-  // Stats
   const actionCounts = {PLAY:0,PAUSE:0,NEXT:0,PREV:0};
   for (const i of userInteractions) { if (i.action_type in actionCounts) actionCounts[i.action_type]++; }
   const topAction = Object.entries(actionCounts).sort((a,b)=>b[1]-a[1])[0][0];
-
   const artistScore = {};
   for (const t of top5) { artistScore[t.artist] = (artistScore[t.artist]||0) + t.score; }
   const topArtist = Object.entries(artistScore).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
@@ -453,25 +468,41 @@ async function loadUserDashboard() {
   document.getElementById('stat-top-action').textContent = topAction;
   document.getElementById('stat-top-artist').textContent = topArtist;
 
-  document.getElementById('user-chart-sub').textContent  = `Dữ liệu từ ${userInteractions.length} lượt tương tác của ${userId}`;
-  document.getElementById('user-action-sub').textContent = `Phân tích hành vi của ${userId}`;
-  document.getElementById('user-info-display').innerHTML = `<span>${userId}</span> — ${userInteractions.length} interactions`;
+  document.getElementById('user-chart-sub').textContent = `Dữ liệu từ ${userInteractions.length} lượt tương tác`;
+  document.getElementById('user-action-sub').textContent = `Phân tích hành vi của ${displayName || searchKey}`;
 
-  // 1. Tạo mảng nhãn đa dòng bằng hàm formatMultilineLabel
-const multilineLabels = top5.map(t => formatMultilineLabel(t.title, 12)); // Thử nghiệm 12 ký tự/dòng
-// 2. Truyền mảng nhãn mới vào biểu đồ
-makeBarChart('chart-user-songs', multilineLabels, top5.map(t=>t.score), COLORS[0]);
+  const multilineLabels = top5.map(t => formatMultilineLabel(t.title, 12));
+  makeBarChart('chart-user-songs', multilineLabels, top5.map(t=>t.score), COLORS[0]);
   makeDoughnutChart('chart-user-actions', Object.keys(actionCounts), Object.values(actionCounts));
-
   const topArtists = Object.entries(artistScore).sort((a,b)=>b[1]-a[1]).slice(0,5);
   makeHBarChart('chart-user-artists', topArtists.map(a=>a[0]), topArtists.map(a=>a[1]));
   renderTrackList('user-track-list', top5);
 }
 
+// SEARCH USER (từ search panel)
+async function searchUser() {
+  const searchKey = document.getElementById('user-id-input').value.trim();
+  if (!searchKey) return;
+  document.getElementById('search-panel').classList.remove('open');
+  await renderDashboard(searchKey, searchKey);
+}
+
 // INIT
 (async () => {
   await fetchData();
-  loadUserDashboard();
+
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    await renderDashboard(currentUser.key, currentUser.key);
+  } else {
+    // Chưa biết user là ai — hiện thông báo
+    document.getElementById('current-user-banner').style.display = 'flex';
+    document.getElementById('banner-username').textContent = 'Chưa đăng nhập';
+    document.getElementById('banner-sub').textContent = 'Dùng nút "Tìm user khác" để tìm kiếm';
+    document.getElementById('no-data-msg').style.display = 'block';
+    document.getElementById('no-data-msg').querySelector('p').innerHTML =
+      'Không xác định được tài khoản hiện tại.<br>Hãy dùng nút <strong>🔍 Tìm user khác</strong> để tìm kiếm.';
+  }
 })();
 </script>
 </body>

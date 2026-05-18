@@ -53,6 +53,21 @@ export class LandingPageComponent implements AfterViewInit {
       this.authService.login(this.username, this.password).subscribe({
         next: (response: any) => {
           console.log('🎉 Backend báo OK, đăng nhập thành công:', response);
+
+          // 1. Lưu tên cho Dashboard hiển thị
+          localStorage.setItem('vibe_username', this.username);
+
+          // 2. LƯU THÊM MÃ ID THẬT ĐỂ ĐỒNG BỘ LUỒNG NGHE NHẠC
+          // Lấy ID do Database của Phong trả về nhét vào kho cho TrackingService xài
+          if (response && response.data && response.data.user_id) {
+            const userToSave = {
+              user_id: response.data.user_id,
+              username: this.username
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userToSave));
+            console.log('🎯 Đã đồng bộ ID nghe nhạc thành công!');
+          }
+
           this.router.navigate(['/app']); // Mở cửa vô web
         },
         error: (err) => {
@@ -77,5 +92,5 @@ export class LandingPageComponent implements AfterViewInit {
         }
       });
     }
-    }
+  }
   }

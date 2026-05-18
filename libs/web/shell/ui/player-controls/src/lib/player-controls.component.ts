@@ -1,6 +1,6 @@
 import { PlaybackService, PlaybackStore } from '@angular-spotify/web/shared/data-access/store';
-import { ChangeDetectionStrategy, Component } from '@angular/core'; // Tui đã xóa chữ inject ở đây cho sạch
-import { startWith } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { startWith, take } from 'rxjs/operators'; // Thêm take ở đây
 import { TrackingService } from './tracking.service';
 
 @Component({
@@ -16,22 +16,37 @@ export class PlayerControlsComponent {
   constructor(
     private playbackStore: PlaybackStore, 
     private playbackService: PlaybackService, 
-    private trackingService: TrackingService // Đã nhét vào constructor thành công!
+    private trackingService: TrackingService 
   ) {}
 
   async togglePlay() {
-    // Tạm thời mình cứ bắn sự kiện PLAY để test luồng trước cho khỏi rắc rối nha
-    this.trackingService.trackAction('PLAY', 'id_bai_hat_tam_thoi');
+    // Lấy bài hát hiện tại ra bằng cách subscribe và tự hủy sau 1 lần lấy (take(1))
+    this.playbackStore.currentTrack$.pipe(take(1)).subscribe(currentTrack => {
+      if (currentTrack) {
+        this.trackingService.trackAction('PLAY', currentTrack);
+      }
+    });
+
     this.playbackService.play(); 
   }
 
   async next() {
-    this.trackingService.trackAction('NEXT', 'id_bai_hat_tam_thoi');
+    this.playbackStore.currentTrack$.pipe(take(1)).subscribe(currentTrack => {
+      if (currentTrack) {
+        this.trackingService.trackAction('NEXT', currentTrack);
+      }
+    });
+
     this.playbackService.next();
   }
 
   async prev() {
-    this.trackingService.trackAction('PREV', 'id_bai_hat_tam_thoi');
+    this.playbackStore.currentTrack$.pipe(take(1)).subscribe(currentTrack => {
+      if (currentTrack) {
+        this.trackingService.trackAction('PREV', currentTrack);
+      }
+    });
+
     this.playbackService.prev();
   }
 }
