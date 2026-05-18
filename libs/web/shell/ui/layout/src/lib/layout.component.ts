@@ -223,11 +223,34 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  // 1. Lưu TỌA ĐỘ khi kéo thả xong
   onDragEnded(event: any, index: number) {
     const newPosition = event.source.getFreeDragPosition();
-    this.stickersByRoute[this.currentUrl][index].x = newPosition.x;
-    this.stickersByRoute[this.currentUrl][index].y = newPosition.y;
-    this.saveStickersToDB(); // Kéo thả xong tự lưu API
+    this.updateStickerData(index, { x: newPosition.x, y: newPosition.y });
+  }
+
+  // 2. Lưu KÍCH THƯỚC khi kéo góc (resize) xong
+  onResizeEnded(index: number, el: HTMLElement) {
+    // Chộp ngay chiều rộng, cao mới nhất của thẻ HTML sau khi bị kéo dãn
+    const newWidth = el.offsetWidth;
+    const newHeight = el.offsetHeight;
+    this.updateStickerData(index, { width: newWidth, height: newHeight });
+  }
+
+  // 3. Hàm gộp chung chuyên Cập nhật & Lưu DB (Bí kíp fix lỗi Angular OnPush)
+  updateStickerData(index: number, newData: any) {
+    // Dùng dấu ... để tạo một bản sao mới toanh của mảng (Ép Angular vẽ lại)
+    const updatedStickers = [...this.stickersByRoute[this.currentUrl]];
+
+    // Gộp dữ liệu mới (tọa độ hoặc kích thước) vào cục sticker hiện tại
+    updatedStickers[index] = {
+      ...updatedStickers[index],
+      ...newData
+    };
+
+    // Trả mảng mới về biến gốc, lưu Database và báo Angular cập nhật giao diện
+    this.stickersByRoute[this.currentUrl] = updatedStickers;
+    this.saveStickersToDB();
     this.cdr.detectChanges();
   }
 }

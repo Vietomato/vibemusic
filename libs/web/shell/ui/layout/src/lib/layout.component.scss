@@ -35,12 +35,19 @@
 
 /* Hiệu ứng tàng hình cho Sticker Controls */
 .sticker-wrapper {
-  position: absolute; /* THÊM DÒNG NÀY: Để nó bám vào cái "bức tường" chứa nó */
-  z-index: 50;        /* THÊM DÒNG NÀY: Để nó nổi lên trên chữ/ảnh của web */
+  position: absolute; /* Giữ nguyên của sếp */
+  z-index: 50;        /* Giữ nguyên của sếp */
 
-  resize: none; /* Mặc định tắt thu phóng để làm biến mất cái vạch ở góc */
-  border: 1px solid transparent; /* Khung ảo để giữ bố cục không bị giật */
-  transition: border 0.2s ease;
+  /* 1. THAY TỘI ĐỒ BẰNG CÁI NÀY: Bật kéo dãn 24/7 để giữ độ mượt */
+  resize: both !important; 
+
+  border: 1px solid transparent; 
+  transition: all 0.2s ease;
+
+  /* 2. DÙNG CHIÊU TÀNG HÌNH GÓC KÉO MẶC ĐỊNH */
+  &::-webkit-resizer {
+    background-color: transparent; /* Giấu cái tam giác kéo mặc định của trình duyệt */
+  }
 
   /* Nút X mặc định tàng hình */
   .btn-delete {
