@@ -55,7 +55,7 @@ export class SpotifyAuthorize {
     const params = new URLSearchParams({
       client_id: this.CLIENT_ID,
       response_type: 'code',
-      redirect_uri: 'http://127.0.0.1:4200/',
+      redirect_uri: window.location.origin + '/',
       scope: this.SCOPES.join(' '),
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
