@@ -25,6 +25,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   stickers: any[] = [];
   showStickerPicker = false;
   apiKey = 'NvjMKgupsz0ZkV5HoTqopDchkAhewP0p'; 
+  currentThemeColors: any = null;
 
   get addedStickers(): any[] {
     return this.stickersByRoute[this.currentUrl] || [];
@@ -167,9 +168,9 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   // HÀM GỌI API CỦA PHONG (Đã khớp toàn bộ luồng)
   loadStickersFromDB(userId: string) {
     const apiUrl = `https://spotify-n585.onrender.com/api/ui-settings/${userId}`;
-
     this.http.get<any>(apiUrl).subscribe({
       next: (res) => {
+        // 1. Phục hồi Sticker (Code gốc của sếp)
         if (res && res.sticker_coordinates) {
           try {
             let data = res.sticker_coordinates;
@@ -186,6 +187,22 @@ export class LayoutComponent implements OnInit, AfterViewInit {
             console.error('Lỗi gán data:', e);
           }
         }
+
+        // 👇 2. ĐOẠN KHẮC PHỤC LỖI F5: LẤY MÀU VÀ ĐẮP LÊN 👇
+        // Tùy theo cấu trúc ông Phong trả API, ta check 2 lớp cho chắc ăn
+        let savedColors = null;
+        if (res && res.theme_colors) {
+          savedColors = res.theme_colors;
+        } else if (res && res.data && res.data.theme_colors) {
+          savedColors = res.data.theme_colors;
+        }
+
+        // Nếu lục ra được màu, gọi hàm đắp màu ở cuối file chạy ngay lập tức!
+        if (savedColors && savedColors.length === 4) {
+          console.log('🎨 Lấy được màu từ DB rồi, đang bơm lên web...', savedColors);
+          this.applySavedTheme(savedColors); 
+        }
+
       },
       error: (err) => console.error('Lỗi khi lấy data từ DB:', err)
     });
@@ -252,5 +269,35 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.stickersByRoute[this.currentUrl] = updatedStickers;
     this.saveStickersToDB();
     this.cdr.detectChanges();
+  }
+  // ==========================================
+  // HÀM TỰ ĐỘNG ĐẮP MÀU KHI VỪA VÀO WEB
+  // ==========================================
+  applySavedTheme(colors: string[]) {
+    if (!colors || colors.length < 4) return; // Nếu mảng màu rỗng thì nghỉ khỏe
+    
+    const styleId = 'vibe-magic-global-style';
+    let styleEl = document.getElementById(styleId) as HTMLStyleElement;
+    
+    if (!styleEl) {
+      styleEl = document.createElement('style') as HTMLStyleElement;
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
+    }
+
+    styleEl.innerHTML = `
+      @keyframes vibeFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 50% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      body, html, as-layout, .main-view, .app-shell, .layout-container {
+        background: linear-gradient(135deg, ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[3]}) !important;
+        background-size: 120% 120% !important;
+        background-attachment: fixed !important;
+        animation: vibeFlow 20s ease infinite !important;
+      }
+    `;
   }
 }
