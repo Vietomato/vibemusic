@@ -1,0 +1,18 @@
+{
+  "buildCommand": "npm run build:prod",
+  "outputDirectory": "dist/apps/angular-spotify",
+  "framework": "angular",
+  "env": {
+    "ENABLE_VC_ANALYTICS": "1"
+  },
+  "routes": [
+    {
+      "src": "^(?!.*\\.).*$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    }
+  ]
+}
